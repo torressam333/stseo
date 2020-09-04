@@ -1957,10 +1957,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      views: 0
+      views: 0,
+      blogs: [],
+      showItem: false
     };
   },
   methods: {
@@ -1970,7 +1985,26 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     //Call server to get views of this blog post...
-    this.views = 100;
+    this.views = 100; //Sample data
+
+    var posts = [{
+      title: "Blog Title 1",
+      post: "Blog Post 1",
+      id: 1
+    }, {
+      title: "Blog Title 2",
+      post: "Blog Post 2",
+      id: 2
+    }, {
+      title: "Blog Title 3",
+      post: "Blog Post 3",
+      id: 3
+    }, {
+      title: "Blog Title 4",
+      post: "Blog Post 4",
+      id: 4
+    }];
+    this.blogs = posts;
   }
 });
 
@@ -19680,33 +19714,71 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", [_vm._v("Number count " + _vm._s(_vm.views))]),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        on: {
-          click: function($event) {
-            return _vm.updateCounter(1)
+  return _c(
+    "div",
+    [
+      _c("h1", [_vm._v("Number count " + _vm._s(_vm.views))]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.updateCounter(1)
+            }
           }
-        }
-      },
-      [_vm._v("Increase")]
-    ),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        on: {
-          click: function($event) {
-            return _vm.updateCounter(-1)
+        },
+        [_vm._v("Increase")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.updateCounter(-1)
+            }
           }
-        }
-      },
-      [_vm._v("Decrease")]
-    )
-  ])
+        },
+        [_vm._v("Decrease")]
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _c("br"),
+      _vm._v(" "),
+      _vm._l(_vm.blogs, function(blog, i) {
+        return _vm.blogs.length
+          ? _c("div", { key: i }, [
+              _c("h1", [_vm._v(_vm._s(blog.title))]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(blog.post))])
+            ])
+          : _vm._e()
+      }),
+      _vm._v(" "),
+      _c("br"),
+      _c("br"),
+      _vm._v(" "),
+      _c("div", [
+        _vm.showItem
+          ? _c("h1", [_vm._v('Show this item if "showItem is true"')])
+          : _c("h1", [_vm._v('Show this item if "showItem is false"')])
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          on: {
+            click: function($event) {
+              _vm.showItem = !_vm.showItem
+            }
+          }
+        },
+        [_vm._v("Change Show Item")]
+      )
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
