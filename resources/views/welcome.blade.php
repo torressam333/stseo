@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>ST Seo</title>
-        <link rel="stylesheet" href="{{mix('')}}">
+        <link rel="stylesheet" href="/css/all.css">
     </head>
     <body>
     <div id="app">

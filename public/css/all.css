@@ -3069,7 +3069,7 @@ i.cross_icon{
 
 .router-link-exact-active{
     color: #0099ff!important;
-    border-right: 2px solid #0099ff !important;
+    border-right: 3px solid #0099ff !important;
     background-color: #eaeeea;
 }
 .space{
