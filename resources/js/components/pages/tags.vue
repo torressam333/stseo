@@ -23,7 +23,7 @@
                             <tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
                                 <td>{{tag.id}}</td>
                                 <td class="_table_name">{{tag.tagname}}</td>
-                                <td>{{tag.created_at}}</td>
+                                <td>{{format_date(tag.created_at)}}</td>
                                 <td>
                                     <Button type="info" size="small">Edit</Button>
                                     <Button type="error" size="small">Delete</Button>
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
     data() {
       return {
@@ -77,17 +79,24 @@ export default {
             //axios call from common.js
             const res = await this.callApi('post', '/app/create_tag', this.data);
             if (res.status === 201) {
+                this.tags.unshift(res.data)
                this.s('Tag has been added successfully!');
                //Close modal when tag is added
                this.addModal = false;
+               this.data.tagName = '';
             }else{
                 this.swr()
+            }
+        },
+        format_date(value) {
+            if (value) {
+                return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
             }
         }
     },
     async created() {
         const res = await this.callApi('get', 'app/get_tags');
-        if (res.status === 200) {
+        if (res.status == 200) {
             //Fill the tags[] in data
             this.tags = res.data;
         }else{

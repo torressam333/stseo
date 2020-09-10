@@ -8,7 +8,7 @@ export default {
         }
     },
     methods: {
-        /*General purpose api asycn method, can be used
+        /*General purpose api async method, can be used
         for any resource REST call anywhere in the app*/
         async callApi(method, url, dataObj) {
             try {
