@@ -444,7 +444,7 @@ textarea {
     align-items: center;
     height: 55px;
     width: 100%;
-    z-index: 11111;
+    z-index: 1;
     top: 0px;
     left: 0px;
     background: #fff;
