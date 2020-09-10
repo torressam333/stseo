@@ -14,4 +14,9 @@ class AdminController extends Controller
             'tagName' => $request->tagName,
         ]);
     }
+
+    public function getTag()
+    {
+        return Tag::all();
+    }
 }

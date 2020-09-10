@@ -1,3 +1,6 @@
+/*Methods in this file are globally available as
+* JS mixin
+* */
 export default {
     data(){
         return {
@@ -5,6 +8,8 @@ export default {
         }
     },
     methods: {
+        /*General purpose api asycn method, can be used
+        for any resource REST call anywhere in the app*/
         async callApi(method, url, dataObj) {
             try {
                 return await axios({

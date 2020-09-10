@@ -2107,7 +2107,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       //Don't display modal by default
       addModal: false,
-      isAdding: false
+      isAdding: false,
+      tags: []
     };
   },
   methods: {
@@ -2151,17 +2152,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     }
-  }
-  /*async created() {
-      //axios call from common.js
-      const res = await this.callApi('post', '/app/create_tag', {tagName: 'test-tag'});
-      if (res.status === 200) {
-          console.log(res);
-      }else{
-          console.log(res)
-      }
-  }*/
+  },
+  created: function created() {
+    var _this2 = this;
 
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var res;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _this2.callApi('get', 'app/get_tags');
+
+            case 2:
+              res = _context2.sent;
+
+              if (res.status === 200) {
+                //Fill the tags[] in data
+                _this2.tags = res.data;
+              } else {
+                _this2.swr();
+              }
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
+  }
 });
 
 /***/ }),
@@ -67666,37 +67687,46 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticClass: "_overflow _table_div" }, [
-                _c("table", { staticClass: "_table" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c("td", [_vm._v("1")]),
+                _c(
+                  "table",
+                  { staticClass: "_table" },
+                  [
+                    _vm._m(0),
                     _vm._v(" "),
-                    _c("td", { staticClass: "_table_name" }, [
-                      _vm._v('Manhattan\'s art center "Shed" opening ceremony')
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("Economy")]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _c(
-                          "Button",
-                          { attrs: { type: "info", size: "small" } },
-                          [_vm._v("Info")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "Button",
-                          { attrs: { type: "error", size: "small" } },
-                          [_vm._v("Error")]
-                        )
-                      ],
-                      1
-                    )
-                  ])
-                ])
+                    _vm._l(_vm.tags, function(tag, i) {
+                      return _vm.tags.length
+                        ? _c("tr", { key: i }, [
+                            _c("td", [_vm._v(_vm._s(tag.id))]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "_table_name" }, [
+                              _vm._v(_vm._s(tag.tagname))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(tag.created_at))]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              [
+                                _c(
+                                  "Button",
+                                  { attrs: { type: "info", size: "small" } },
+                                  [_vm._v("Edit")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "Button",
+                                  { attrs: { type: "error", size: "small" } },
+                                  [_vm._v("Delete")]
+                                )
+                              ],
+                              1
+                            )
+                          ])
+                        : _vm._e()
+                    })
+                  ],
+                  2
+                )
               ])
             ]
           ),
@@ -83101,11 +83131,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+/*Methods in this file are globally available as
+* JS mixin
+* */
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
   },
   methods: {
+    /*General purpose api asycn method, can be used
+    for any resource REST call anywhere in the app*/
     callApi: function callApi(method, url, dataObj) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
