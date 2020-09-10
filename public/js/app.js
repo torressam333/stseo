@@ -2134,8 +2134,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 4:
                 res = _context.sent;
 
-                if (res.status === 200) {
-                  _this.s('Tag has been added successfully!');
+                if (res.status === 201) {
+                  _this.s('Tag has been added successfully!'); //Close modal when tag is added
+
+
+                  _this.addModal = false;
                 } else {
                   _this.swr();
                 }

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('app/create_tag', 'TestController@test');
+Route::post('app/create_tag', 'AdminController@addTag');
 
 Route::get('/', function () {
     return view('welcome');

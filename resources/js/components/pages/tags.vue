@@ -75,8 +75,10 @@ export default {
             if(this.data.tagName.trim() === '') return this.e('A tag name is required');
             //axios call from common.js
             const res = await this.callApi('post', '/app/create_tag', this.data);
-            if (res.status === 200) {
+            if (res.status === 201) {
                this.s('Tag has been added successfully!');
+               //Close modal when tag is added
+               this.addModal = false;
             }else{
                 this.swr()
             }
