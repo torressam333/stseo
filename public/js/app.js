@@ -2147,7 +2147,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.addModal = false;
                   _this.data.tagName = '';
                 } else {
-                  _this.swr();
+                  if (res.status === 422) {
+                    if (res.data.errors.tagName) {
+                      _this.i(res.data.errors.tagName[0]);
+                    }
+                  } else {
+                    _this.swr();
+                  }
                 }
 
               case 6:
@@ -2179,7 +2185,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 2:
               res = _context2.sent;
 
-              if (res.status == 200) {
+              if (res.status === 200) {
                 //Fill the tags[] in data
                 _this2.tags = res.data;
               } else {

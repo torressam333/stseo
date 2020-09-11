@@ -85,7 +85,14 @@ export default {
                this.addModal = false;
                this.data.tagName = '';
             }else{
-                this.swr()
+                if (res.status === 422) {
+                    if (res.data.errors.tagName) {
+                        this.i(res.data.errors.tagName[0]);
+                    }
+                }else{
+                    this.swr();
+                }
+
             }
         },
         format_date(value) {
@@ -96,7 +103,7 @@ export default {
     },
     async created() {
         const res = await this.callApi('get', 'app/get_tags');
-        if (res.status == 200) {
+        if (res.status === 200) {
             //Fill the tags[] in data
             this.tags = res.data;
         }else{
