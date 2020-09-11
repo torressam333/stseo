@@ -22,10 +22,10 @@
                             <!-- Display Tags From DB -->
                             <tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
                                 <td>{{tag.id}}</td>
-                                <td class="_table_name">{{tag.tagname}}</td>
+                                <td class="_table_name">{{tag.tagName}}</td>
                                 <td>{{format_date(tag.created_at)}}</td>
                                 <td>
-                                    <Button type="info" size="small">Edit</Button>
+                                    <Button type="info" size="small" @click="showEditModal(tag, i)">Edit</Button>
                                     <Button type="error" size="small">Delete</Button>
                                 </td>
                             </tr>
@@ -53,6 +53,26 @@
                         >{{ isAdding ? 'Adding...' : 'Add tag' }}</Button>
                     </div>
                 </Modal>
+
+                <!--Edit tag modal-->
+                <Modal
+                    v-model="editModal"
+                    title="Edit tag"
+                    :mask-closable="false"
+                    :closable="false"
+                >
+                    <Input v-model="editData.tagName" placeholder="Edit tag name"/>
+
+                    <div slot="footer">
+                        <Button type="default" @click="editModal=false">Close</Button>
+                        <Button
+                            type="info"
+                            @click="editTag"
+                            :disabled="isAdding"
+                            :loading="isAdding"
+                        >{{ isAdding ? 'Editing...' : 'Edit tag' }}</Button>
+                    </div>
+                </Modal>
             </div>
         </div>
     </div>
@@ -69,8 +89,13 @@ export default {
           },
           //Don't display modal by default
           addModal: false,
+          editModal: false,
           isAdding: false,
-          tags: []
+          tags: [],
+          editData: {
+              tagName: ''
+          },
+          index : -1
       }
     },
     methods: {
@@ -92,8 +117,35 @@ export default {
                 }else{
                     this.swr();
                 }
-
             }
+        },
+        async editTag() {
+            if(this.editData.tagName.trim() === '') return this.e('Tag name is required')
+            const res = await this.callApi('post', 'app/edit_tag', this.editData);
+            if (res.status === 200) {
+                //Go to tag index and replace with edited tag name
+                this.tags[this.index].tagName = this.editData.tagName;
+                this.s('Tag has been edited successfully');
+                this.editModal = false;
+            } else{
+                if (res.status === 422) {
+                    if (res.data.errors.tagName) {
+                        this.i(res.data.errors.tagName[0]);
+                    }
+                }else{
+                    this.swr();
+                }
+            }
+        },
+        showEditModal(tag, index) {
+            //Assign data to be usable in editData v-model
+            let obj = {
+                id: tag.id,
+                tagName: tag.tagName
+            }
+            this.editData = obj;
+            this.editModal = true;
+            this.index = index;
         },
         format_date(value) {
             if (value) {
