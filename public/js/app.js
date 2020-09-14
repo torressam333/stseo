@@ -2121,6 +2121,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2136,7 +2163,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       editData: {
         tagName: ''
       },
-      index: -1
+      index: -1,
+      showDeleteModal: false,
+      isDeleting: false,
+      deleteItem: {},
+      deletingIndex: -1
     };
   },
   methods: {
@@ -2247,6 +2278,49 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.editModal = true;
       this.index = index;
     },
+    deleteTag: function deleteTag() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                //When deletion is in process
+                _this3.isDeleting = true;
+                _context3.next = 3;
+                return _this3.callApi('post', 'app/delete_tag', _this3.deleteItem);
+
+              case 3:
+                res = _context3.sent;
+
+                if (res.status === 200) {
+                  _this3.tags.splice(_this3.deletingIndex, 1);
+
+                  _this3.s('Tag has been deleted successfully');
+                } else {
+                  _this3.swr();
+                } //When deletion is complete
+
+
+                _this3.isDeleting = false; //Close deletion modal when deletion is complete
+
+                _this3.showDeleteModal = false;
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    showDeletingModal: function showDeletingModal(tag, i) {
+      this.deleteItem = tag;
+      this.deletingIndex = i;
+      this.showDeleteModal = true;
+    },
     format_date: function format_date(value) {
       if (value) {
         return moment__WEBPACK_IMPORTED_MODULE_1___default()(String(value)).format('MMM DD YYYY, h:mm:ss a');
@@ -2254,33 +2328,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this4 = this;
 
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
       var res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.next = 2;
-              return _this3.callApi('get', 'app/get_tags');
+              _context4.next = 2;
+              return _this4.callApi('get', 'app/get_tags');
 
             case 2:
-              res = _context3.sent;
+              res = _context4.sent;
 
               if (res.status === 200) {
                 //Fill the tags[] in data
-                _this3.tags = res.data;
+                _this4.tags = res.data;
               } else {
-                _this3.swr();
+                _this4.swr();
               }
 
             case 4:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3);
+      }, _callee4);
     }))();
   }
 });
@@ -88956,7 +89030,7 @@ var render = function() {
                 "p",
                 { staticClass: "_title0" },
                 [
-                  _vm._v("Tags\n                "),
+                  _vm._v("Tags\n                    "),
                   _c(
                     "Button",
                     {
@@ -88970,7 +89044,9 @@ var render = function() {
                       _c("Icon", { attrs: { type: "md-add" } }, [
                         _vm._v("Default")
                       ]),
-                      _vm._v("Add Tag")
+                      _vm._v(
+                        "\n                        Add Tag\n                    "
+                      )
                     ],
                     1
                   )
@@ -89016,8 +89092,23 @@ var render = function() {
                                 _vm._v(" "),
                                 _c(
                                   "Button",
-                                  { attrs: { type: "error", size: "small" } },
-                                  [_vm._v("Delete")]
+                                  {
+                                    attrs: {
+                                      type: "error",
+                                      size: "small",
+                                      loading: tag.isDeleting
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showDeletingModal(tag, i)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "Delete\n                                "
+                                    )
+                                  ]
                                 )
                               ],
                               1
@@ -89087,7 +89178,12 @@ var render = function() {
                       },
                       on: { click: _vm.addTag }
                     },
-                    [_vm._v(_vm._s(_vm.isAdding ? "Adding..." : "Add tag"))]
+                    [
+                      _vm._v(
+                        _vm._s(_vm.isAdding ? "Adding..." : "Add tag") +
+                          "\n                    "
+                      )
+                    ]
                   )
                 ],
                 1
@@ -89151,13 +89247,74 @@ var render = function() {
                       },
                       on: { click: _vm.editTag }
                     },
-                    [_vm._v(_vm._s(_vm.isAdding ? "Editing..." : "Edit tag"))]
+                    [
+                      _vm._v(
+                        _vm._s(_vm.isAdding ? "Editing..." : "Edit tag") +
+                          "\n                    "
+                      )
+                    ]
                   )
                 ],
                 1
               )
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "Modal",
+            {
+              attrs: { width: "360" },
+              model: {
+                value: _vm.showDeleteModal,
+                callback: function($$v) {
+                  _vm.showDeleteModal = $$v
+                },
+                expression: "showDeleteModal"
+              }
+            },
+            [
+              _c(
+                "p",
+                {
+                  staticStyle: { color: "#e70000", "text-align": "center" },
+                  attrs: { slot: "header" },
+                  slot: "header"
+                },
+                [
+                  _c("Icon", { attrs: { type: "ios-information-circle" } }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Delete confirmation")])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticStyle: { "text-align": "center" } }, [
+                _c("p", [_vm._v("Are you sure you want to delete this tag?")])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { attrs: { slot: "footer" }, slot: "footer" },
+                [
+                  _c(
+                    "Button",
+                    {
+                      attrs: {
+                        type: "error",
+                        size: "large",
+                        long: "",
+                        loading: _vm.isDeleting,
+                        disabled: _vm.isDeleting
+                      },
+                      on: { click: _vm.deleteTag }
+                    },
+                    [_vm._v("Delete")]
+                  )
+                ],
+                1
+              )
+            ]
           )
         ],
         1

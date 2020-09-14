@@ -31,6 +31,16 @@ class AdminController extends Controller
         ]);
     }
 
+    public function deleteTag(Request $request)
+    {
+        //Validate the request
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        return Tag::where('id', $request->id)->delete();
+    }
+
     public function getTag()
     {
         return Tag::orderBy('id', 'desc')->get();
