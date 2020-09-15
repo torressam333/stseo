@@ -44,7 +44,7 @@
                 <!--Add tag modal-->
                 <Modal
                     v-model="addModal"
-                    title="Common Modal dialog box title"
+                    title="Add Tag"
                     :mask-closable="false"
                     :closable="false"
                 >
@@ -190,7 +190,7 @@ export default {
             }
             //When deletion is complete
             this.isDeleting = false;
-            //Close deletion modal when deletion is complete
+            //Close modal when deletion is complete
             this.showDeleteModal = false;
         },
         showDeletingModal(tag, i) {
