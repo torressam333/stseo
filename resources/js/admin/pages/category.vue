@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-                    <p class="_title0">Tags
+                    <p class="_title0">Category
                         <Button @click="addModal=true">
                             <Icon type="md-add">Default</Icon>
                             Add Category
@@ -52,13 +52,23 @@
                     <div class="space"></div>
                     <Upload
                         type="drag"
-                        :headers="{'x-csrf-token':token}"
+                        :headers="{'x-csrf-token':token, 'X-Requested-With':'XMLHttpRequest'}"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :max-size="2048"
+                        :on-exceeded-size="handleMaxSize"
+                        :format="['jpg','jpeg','png','bmp','docx','txt','xlsx','xlsm','pdf','doc']"
+                        :on-format-error="handleFormatError"
                         action="/app/upload">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                             <p>Click or drag files here to upload</p>
                         </div>
                     </Upload>
+                    <!--Show thumbnail for any image files-->
+                    <div class="image_thumb" v-if="data.iconImage">
+                        <img :src="`/uploads/${data.iconImage}`">
+                    </div>
 
                     <div slot="footer">
                         <Button type="default" @click="addModal=false">Close</Button>
@@ -123,7 +133,8 @@ export default {
     data() {
         return {
             data: {
-                tagName: ''
+                iconImage: '',
+                categoryName: ''
             },
             //Don't display modal by default
             addModal: false,
@@ -214,7 +225,29 @@ export default {
             if (value) {
                 return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
             }
-        }
+        },
+        handleSuccess(res, file) {
+            //When file is uploaded
+            this.data.iconImage = res;
+        },
+        handleError(res, file) {
+            this.$Notice.warning({
+                title: 'Incorrect file format',
+                desc: `${file.errors.file.length ? file.errors.file[0] : 'Something went wrong!'}`
+            });
+        },
+        handleFormatError(file) {
+            this.$Notice.warning({
+                title: 'The file format is incorrect',
+                desc: 'File format of ' + file.name + ' is incorrect, please select an acceptable file format.'
+            });
+        },
+        handleMaxSize(file) {
+            this.$Notice.warning({
+                title: 'Exceeding file size limit',
+                desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+            });
+        },
     },
     async created() {
         //Assign csrf token

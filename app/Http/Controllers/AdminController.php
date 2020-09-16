@@ -49,6 +49,9 @@ class AdminController extends Controller
 
     public function upload(Request $request)
     {
+        $this->validate($request, [
+           'file' => 'required|mimes:jpeg,jpg,bmp,png,doc,docx,txt,xlsx,xlsm,pdf'
+        ]);
         //Get file extension and upload to public/uploads file
         $picName = time() . '.' . $request->file->extension();
         $request->file->move(public_path('uploads'), $picName);

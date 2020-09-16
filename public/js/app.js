@@ -2048,12 +2048,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       data: {
-        tagName: ''
+        iconImage: '',
+        categoryName: ''
       },
       //Don't display modal by default
       addModal: false,
@@ -2226,6 +2237,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (value) {
         return moment__WEBPACK_IMPORTED_MODULE_1___default()(String(value)).format('MMM DD YYYY, h:mm:ss a');
       }
+    },
+    handleSuccess: function handleSuccess(res, file) {
+      //When file is uploaded
+      this.data.iconImage = res;
+    },
+    handleError: function handleError(res, file) {
+      this.$Notice.warning({
+        title: 'Incorrect file format',
+        desc: "".concat(file.errors.file.length ? file.errors.file[0] : 'Something went wrong!')
+      });
+    },
+    handleFormatError: function handleFormatError(file) {
+      this.$Notice.warning({
+        title: 'The file format is incorrect',
+        desc: 'File format of ' + file.name + ' is incorrect, please select an acceptable file format.'
+      });
+    },
+    handleMaxSize: function handleMaxSize(file) {
+      this.$Notice.warning({
+        title: 'Exceeding file size limit',
+        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+      });
     }
   },
   created: function created() {
@@ -88612,7 +88645,7 @@ var render = function() {
                 "p",
                 { staticClass: "_title0" },
                 [
-                  _vm._v("Tags\n                    "),
+                  _vm._v("Category\n                    "),
                   _c(
                     "Button",
                     {
@@ -88740,7 +88773,27 @@ var render = function() {
                 {
                   attrs: {
                     type: "drag",
-                    headers: { "x-csrf-token": _vm.token },
+                    headers: {
+                      "x-csrf-token": _vm.token,
+                      "X-Requested-With": "XMLHttpRequest"
+                    },
+                    "on-success": _vm.handleSuccess,
+                    "on-error": _vm.handleError,
+                    "max-size": 2048,
+                    "on-exceeded-size": _vm.handleMaxSize,
+                    format: [
+                      "jpg",
+                      "jpeg",
+                      "png",
+                      "bmp",
+                      "docx",
+                      "txt",
+                      "xlsx",
+                      "xlsm",
+                      "pdf",
+                      "doc"
+                    ],
+                    "on-format-error": _vm.handleFormatError,
                     action: "/app/upload"
                   }
                 },
@@ -88760,6 +88813,14 @@ var render = function() {
                   )
                 ]
               ),
+              _vm._v(" "),
+              _vm.data.iconImage
+                ? _c("div", { staticClass: "image_thumb" }, [
+                    _c("img", {
+                      attrs: { src: "/uploads/" + _vm.data.iconImage }
+                    })
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "div",
