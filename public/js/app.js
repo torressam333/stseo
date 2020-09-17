@@ -2061,6 +2061,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2275,12 +2276,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 //Delete image before upload
                 image = _this4.data.iconImage;
                 _this4.data.iconImage = '';
-                _context4.next = 4;
+
+                _this4.$refs.uploads.clearFiles();
+
+                _context4.next = 5;
                 return _this4.callApi('post', 'app/delete_image', {
                   imageName: image
                 });
 
-              case 4:
+              case 5:
                 res = _context4.sent;
 
                 //If not deleted successfully
@@ -2290,7 +2294,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.i('The image was not able to be deleted');
                 }
 
-              case 6:
+              case 7:
               case "end":
                 return _context4.stop();
             }
@@ -88809,6 +88813,7 @@ var render = function() {
               _c(
                 "Upload",
                 {
+                  ref: "uploads",
                   attrs: {
                     type: "drag",
                     headers: {

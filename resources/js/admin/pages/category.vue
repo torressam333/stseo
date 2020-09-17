@@ -51,6 +51,7 @@
                     <Input v-model="data.tagName" placeholder="Add category"/>
                     <div class="space"></div>
                     <Upload
+                        ref="uploads"
                         type="drag"
                         :headers="{'x-csrf-token':token, 'X-Requested-With':'XMLHttpRequest'}"
                         :on-success="handleSuccess"
@@ -255,6 +256,7 @@ export default {
             //Delete image before upload
             let image = this.data.iconImage;
             this.data.iconImage = '';
+            this.$refs.uploads.clearFiles();
 
             const res = await this.callApi('post', 'app/delete_image', {
                imageName: image
