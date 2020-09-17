@@ -66,8 +66,11 @@
                         </div>
                     </Upload>
                     <!--Show thumbnail for any image files-->
-                    <div class="image_thumb" v-if="data.iconImage">
+                    <div class="demo-upload-list" v-if="data.iconImage">
                         <img :src="`/uploads/${data.iconImage}`">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-trash-outline" @click="deleteImage"></Icon>
+                        </div>
                     </div>
 
                     <div slot="footer">
@@ -110,7 +113,7 @@
                         <span>Delete confirmation</span>
                     </p>
                     <div style="text-align:center">
-                        <p>Are you sure you want to delete this tag?</p>
+                        <p>Are you sure you want to delete this category?</p>
                     </div>
                     <div slot="footer">
                         <Button type="error" size="large" long
@@ -248,6 +251,21 @@ export default {
                 desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
         },
+        async deleteImage() {
+            //Delete image before upload
+            let image = this.data.iconImage;
+            this.data.iconImage = '';
+
+            const res = await this.callApi('post', 'app/delete_image', {
+               imageName: image
+            });
+
+            //If not deleted successfully
+            if (res.status !== 200) {
+                this.data.iconImage = image;
+                this.i('The image was not able to be deleted');
+            }
+        }
     },
     async created() {
         //Assign csrf token

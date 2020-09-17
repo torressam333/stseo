@@ -2058,6 +2058,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2259,38 +2262,73 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         title: 'Exceeding file size limit',
         desc: 'File  ' + file.name + ' is too large, no more than 2M.'
       });
+    },
+    deleteImage: function deleteImage() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var image, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                //Delete image before upload
+                image = _this4.data.iconImage;
+                _this4.data.iconImage = '';
+                _context4.next = 4;
+                return _this4.callApi('post', 'app/delete_image', {
+                  imageName: image
+                });
+
+              case 4:
+                res = _context4.sent;
+
+                //If not deleted successfully
+                if (res.status !== 200) {
+                  _this4.data.iconImage = image;
+
+                  _this4.i('The image was not able to be deleted');
+                }
+
+              case 6:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
       var res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               //Assign csrf token
-              _this4.token = window.Laravel.csrfToken;
-              _context4.next = 3;
-              return _this4.callApi('get', 'app/get_tags');
+              _this5.token = window.Laravel.csrfToken;
+              _context5.next = 3;
+              return _this5.callApi('get', 'app/get_tags');
 
             case 3:
-              res = _context4.sent;
+              res = _context5.sent;
 
               if (res.status === 200) {
                 //Fill the tags[] in data
-                _this4.tags = res.data;
+                _this5.tags = res.data;
               } else {
-                _this4.swr();
+                _this5.swr();
               }
 
             case 5:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }))();
   }
 });
@@ -88815,10 +88853,22 @@ var render = function() {
               ),
               _vm._v(" "),
               _vm.data.iconImage
-                ? _c("div", { staticClass: "image_thumb" }, [
+                ? _c("div", { staticClass: "demo-upload-list" }, [
                     _c("img", {
                       attrs: { src: "/uploads/" + _vm.data.iconImage }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "demo-upload-list-cover" },
+                      [
+                        _c("Icon", {
+                          attrs: { type: "ios-trash-outline" },
+                          on: { click: _vm.deleteImage }
+                        })
+                      ],
+                      1
+                    )
                   ])
                 : _vm._e(),
               _vm._v(" "),
@@ -88961,7 +89011,9 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticStyle: { "text-align": "center" } }, [
-                _c("p", [_vm._v("Are you sure you want to delete this tag?")])
+                _c("p", [
+                  _vm._v("Are you sure you want to delete this category?")
+                ])
               ]),
               _vm._v(" "),
               _c(
