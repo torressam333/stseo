@@ -16,6 +16,7 @@
                             <!-- TABLE TITLE -->
                             <tr>
                                 <th>ID</th>
+                                <th>Icon image</th>
                                 <th>Category name</th>
                                 <th>Created at</th>
                                 <th>Action</th>
@@ -23,20 +24,22 @@
                             <!-- TABLE TITLE -->
 
                             <!-- Display Tags From DB -->
-                            <tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
-                                <td>{{ tag.id }}</td>
-                                <td class="_table_name">{{ tag.tagName }}</td>
-                                <td>{{ format_date(tag.created_at) }}</td>
+                            <tr v-for="(category, i) in categories" :key="i" v-if="categories.length">
+                                <td>{{ category.id }}</td>
+                                <td class="table_image">
+                                    <img :src="category.iconImage" alt="image thumbnail">
+                                </td>
+                                <td class="_table_name">{{ category.categoryName }}</td>
+                                <td>{{ format_date(category.created_at) }}</td>
                                 <td>
-                                    <Button type="info" size="small" @click="showEditModal(tag, i)">Edit</Button>
+                                    <Button type="info" size="small" @click="showEditModal(category, i)">Edit</Button>
                                     <Button type="error" size="small"
-                                            @click="showDeletingModal(tag, i)"
-                                            :loading="tag.isDeleting"
+                                            @click="showDeletingModal(category, i)"
+                                            :loading="category.isDeleting"
                                     >Delete
                                     </Button>
                                 </td>
                             </tr>
-                            <!-- ITEMS -->
                         </table>
                     </div>
                 </div>
@@ -48,7 +51,7 @@
                     :mask-closable="false"
                     :closable="false"
                 >
-                    <Input v-model="data.tagName" placeholder="Add category"/>
+                    <Input v-model="data.categoryName" placeholder="Add category"/>
                     <div class="space"></div>
                     <Upload
                         ref="uploads"
@@ -78,10 +81,10 @@
                         <Button type="default" @click="addModal=false">Close</Button>
                         <Button
                             type="success"
-                            @click="addTag"
+                            @click="addCategory"
                             :disabled="isAdding"
                             :loading="isAdding"
-                        >{{ isAdding ? 'Adding...' : 'Add tag' }}
+                        >{{ isAdding ? 'Adding...' : 'Add Category' }}
                         </Button>
                     </div>
                 </Modal>
@@ -89,11 +92,11 @@
                 <!--Edit tag modal-->
                 <Modal
                     v-model="editModal"
-                    title="Edit tag"
+                    title="Edit category"
                     :mask-closable="false"
                     :closable="false"
                 >
-                    <Input v-model="editData.tagName" placeholder="Edit tag name"/>
+                    <Input v-model="editData.categoryName" placeholder="Edit tag name"/>
 
                     <div slot="footer">
                         <Button type="default" @click="editModal=false">Close</Button>
@@ -102,7 +105,7 @@
                             @click="editTag"
                             :disabled="isAdding"
                             :loading="isAdding"
-                        >{{ isAdding ? 'Editing...' : 'Edit tag' }}
+                        >{{ isAdding ? 'Editing...' : 'Edit category' }}
                         </Button>
                     </div>
                 </Modal>
@@ -120,7 +123,7 @@
                         <Button type="error" size="large" long
                                 :loading="isDeleting"
                                 :disabled="isDeleting"
-                                @click="deleteTag"
+                                @click="deleteCategory"
                         >Delete
                         </Button>
                     </div>
@@ -144,9 +147,9 @@ export default {
             addModal: false,
             editModal: false,
             isAdding: false,
-            tags: [],
+            categories: [],
             editData: {
-                tagName: ''
+                categoryName: ''
             },
             index: -1,
             showDeleteModal: false,
@@ -157,20 +160,26 @@ export default {
         }
     },
     methods: {
-        async addTag() {
-            if (this.data.tagName.trim() === '') return this.e('A tag name is required');
+        async addCategory() {
+            if (this.data.categoryName.trim() === '') return this.e('A category name is required');
+            if (this.data.iconImage.trim() === '') return this.e('Icon image is required');
+            this.data.iconImage = `/uploads/${this.data.iconImage}`;
             //axios call from common.js
-            const res = await this.callApi('post', '/app/create_tag', this.data);
+            const res = await this.callApi('post', '/app/create_category', this.data);
             if (res.status === 201) {
-                this.tags.unshift(res.data)
-                this.s('Tag has been added successfully!');
+                this.categories.unshift(res.data)
+                this.s('Category has been added successfully!');
                 //Close modal when tag is added
                 this.addModal = false;
-                this.data.tagName = '';
+                this.data.categoryName = '';
+                this.data.iconImage = '';
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.tagName) {
-                        this.i(res.data.errors.tagName[0]);
+                    if (res.data.errors.categoryName) {
+                        this.i(res.data.errors.categoryName[0]);
+                    }
+                    if (res.data.errors.iconImage) {
+                        this.i(res.data.errors.iconImage[0]);
                     }
                 } else {
                     this.swr();
@@ -178,40 +187,40 @@ export default {
             }
         },
         async editTag() {
-            if (this.editData.tagName.trim() === '') return this.e('Tag name is required')
-            const res = await this.callApi('post', 'app/edit_tag', this.editData);
+            if (this.editData.categoryName.trim() === '') return this.e('Category name is required')
+            const res = await this.callApi('post', 'app/edit_category', this.editData);
             if (res.status === 200) {
                 //Go to tag index and replace with edited tag name
-                this.tags[this.index].tagName = this.editData.tagName;
-                this.s('Tag has been edited successfully');
+                this.categories[this.index].categoryName = this.editData.categoryName;
+                this.s('Category has been edited successfully');
                 this.editModal = false;
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.tagName) {
-                        this.i(res.data.errors.tagName[0]);
+                    if (res.data.errors.categoryName) {
+                        this.i(res.data.errors.categoryName[0]);
                     }
                 } else {
                     this.swr();
                 }
             }
         },
-        showEditModal(tag, index) {
+        showEditModal(category, index) {
             //Assign data to be usable in editData v-model
             let obj = {
-                id: tag.id,
-                tagName: tag.tagName
+                id: category.id,
+                categoryName: category.categoryName
             }
             this.editData = obj;
             this.editModal = true;
             this.index = index;
         },
-        async deleteTag() {
+        async deleteCategory() {
             //When deletion is in process
             this.isDeleting = true;
-            const res = await this.callApi('post', 'app/delete_tag', this.deleteItem);
+            const res = await this.callApi('post', 'app/delete_category', this.deleteItem);
             if (res.status === 200) {
-                this.tags.splice(this.deletingIndex, 1);
-                this.s('Tag has been deleted successfully')
+                this.categories.splice(this.deletingIndex, 1);
+                this.s('Category has been deleted successfully')
             } else {
                 this.swr();
             }
@@ -220,8 +229,8 @@ export default {
             //Close modal when deletion is complete
             this.showDeleteModal = false;
         },
-        showDeletingModal(tag, i) {
-            this.deleteItem = tag;
+        showDeletingModal(category, i) {
+            this.deleteItem = category;
             this.deletingIndex = i;
             this.showDeleteModal = true;
         },
@@ -230,7 +239,7 @@ export default {
                 return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
             }
         },
-        handleSuccess(res, file) {
+        handleSuccess(res) {
             //When file is uploaded
             this.data.iconImage = res;
         },
@@ -259,7 +268,7 @@ export default {
             this.$refs.uploads.clearFiles();
 
             const res = await this.callApi('post', 'app/delete_image', {
-               imageName: image
+                imageName: image
             });
 
             //If not deleted successfully
@@ -273,10 +282,10 @@ export default {
         //Assign csrf token
         this.token = window.Laravel.csrfToken;
 
-        const res = await this.callApi('get', 'app/get_tags');
+        const res = await this.callApi('get', 'app/get_categories');
         if (res.status === 200) {
-            //Fill the tags[] in data
-            this.tags = res.data;
+            //Fill the categories[] in data attribute
+            this.categories = res.data;
         } else {
             this.swr();
         }

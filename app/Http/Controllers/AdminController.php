@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
+/**
+ * Class AdminController
+ * @package App\Http\Controllers
+ */
 class AdminController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws ValidationException
+     */
     public function addTag(Request $request)
     {
         //Validate the request
@@ -69,8 +79,47 @@ class AdminController extends Controller
     public function deleteFileFromServer($fileName)
     {
         $filePath = public_path(). '/uploads/'. $fileName;
-        file_exists($filePath) ? @unlink($filePath) : 'Did not delete properly';
+        file_exists($filePath) ? @unlink($filePath) : null;
+    }
 
-        return;
+    public function addCategory(Request $request)
+    {
+        //Validate the request
+        $this->validate($request, [
+            'categoryName' => 'required',
+            'iconImage' => 'required'
+        ]);
+        return Category::create([
+            'categoryName' => $request->categoryName,
+            'iconImage' => $request->iconImage,
+        ]);
+    }
+
+    public function getCategories()
+    {
+        return Category::orderBy('id', 'desc')->get();
+    }
+
+    public function deleteCategory(Request $request)
+    {
+        //Validate the request
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        return Category::where('id', $request->id)->delete();
+    }
+
+    public function editCategory(Request $request)
+    {
+        //Validate the request
+        $this->validate($request, [
+            'categoryName' => 'required',
+            'id' => 'required'
+        ]);
+
+        return Category::where('id', $request->id)->update([
+            'categoryName' => $request->categoryName,
+        ]);
     }
 }
