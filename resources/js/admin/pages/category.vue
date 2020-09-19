@@ -71,7 +71,7 @@
                     </Upload>
                     <!--Show thumbnail for any image files-->
                     <div class="demo-upload-list" v-if="data.iconImage">
-                        <img :src="`/uploads/${data.iconImage}`">
+                        <img :src="`${data.iconImage}`">
                         <div class="demo-upload-list-cover">
                             <Icon type="ios-trash-outline" @click="deleteImage"></Icon>
                         </div>
@@ -97,12 +97,36 @@
                     :closable="false"
                 >
                     <Input v-model="editData.categoryName" placeholder="Edit tag name"/>
+                    <div class="space"></div>
+                    <Upload v-show="isIconImageNew"
+                        ref="editaDataUploads"
+                        type="drag"
+                        :headers="{'x-csrf-token':token, 'X-Requested-With':'XMLHttpRequest'}"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :max-size="2048"
+                        :on-exceeded-size="handleMaxSize"
+                        :format="['jpg','jpeg','png','bmp','docx','txt','xlsx','xlsm','pdf','doc']"
+                        :on-format-error="handleFormatError"
+                        action="/app/upload">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>Click or drag files here to upload</p>
+                        </div>
+                    </Upload>
+                    <!--Show thumbnail for any image files-->
+                    <div class="demo-upload-list" v-if="editData.iconImage">
+                        <img :src="`${editData.iconImage}`">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-trash-outline" @click="deleteImage(false)"></Icon>
+                        </div>
+                    </div>
 
                     <div slot="footer">
-                        <Button type="default" @click="editModal=false">Close</Button>
+                        <Button type="default" @click="closeEditModal">Close</Button>
                         <Button
                             type="info"
-                            @click="editTag"
+                            @click="editCategory"
                             :disabled="isAdding"
                             :loading="isAdding"
                         >{{ isAdding ? 'Editing...' : 'Edit category' }}
@@ -149,6 +173,7 @@ export default {
             isAdding: false,
             categories: [],
             editData: {
+                iconImage : '',
                 categoryName: ''
             },
             index: -1,
@@ -156,14 +181,16 @@ export default {
             isDeleting: false,
             deleteItem: {},
             deletingIndex: -1,
-            token: ''
+            token: '',
+            isIconImageNew : false,
+            isEditingItem : false
         }
     },
     methods: {
         async addCategory() {
             if (this.data.categoryName.trim() === '') return this.e('A category name is required');
             if (this.data.iconImage.trim() === '') return this.e('Icon image is required');
-            this.data.iconImage = `/uploads/${this.data.iconImage}`;
+            this.data.iconImage = `${this.data.iconImage}`;
             //axios call from common.js
             const res = await this.callApi('post', '/app/create_category', this.data);
             if (res.status === 201) {
@@ -175,30 +202,24 @@ export default {
                 this.data.iconImage = '';
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.categoryName) {
-                        this.i(res.data.errors.categoryName[0]);
-                    }
-                    if (res.data.errors.iconImage) {
-                        this.i(res.data.errors.iconImage[0]);
-                    }
+                    this.unprocessableEntityError();
                 } else {
                     this.swr();
                 }
             }
         },
-        async editTag() {
+        async editCategory() {
             if (this.editData.categoryName.trim() === '') return this.e('Category name is required')
+            if (this.editData.iconImage.trim() === '') return this.e('Icon image is required');
             const res = await this.callApi('post', 'app/edit_category', this.editData);
             if (res.status === 200) {
-                //Go to tag index and replace with edited tag name
+                //Go to category index and replace with edited tag name
                 this.categories[this.index].categoryName = this.editData.categoryName;
-                this.s('Category has been edited successfully');
+                this.s('Category has been edited successfully!');
                 this.editModal = false;
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.categoryName) {
-                        this.i(res.data.errors.categoryName[0]);
-                    }
+                    this.unprocessableEntityError();
                 } else {
                     this.swr();
                 }
@@ -206,13 +227,10 @@ export default {
         },
         showEditModal(category, index) {
             //Assign data to be usable in editData v-model
-            let obj = {
-                id: category.id,
-                categoryName: category.categoryName
-            }
-            this.editData = obj;
+            this.editData = category;
             this.editModal = true;
             this.index = index;
+            this.isEditingItem = true;
         },
         async deleteCategory() {
             //When deletion is in process
@@ -240,6 +258,11 @@ export default {
             }
         },
         handleSuccess(res) {
+            res = `/uploads/${res}`;
+
+            if (this.isEditingItem) {
+                return this.editData.iconImage = res;
+            }
             //When file is uploaded
             this.data.iconImage = res;
         },
@@ -261,20 +284,41 @@ export default {
                 desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
         },
-        async deleteImage() {
-            //Delete image before upload
-            let image = this.data.iconImage;
-            this.data.iconImage = '';
-            this.$refs.uploads.clearFiles();
+        async deleteImage(isAdd = true) {
+            let image;
+            if (!isAdd) {
+                //For editing
+                this.isIconImageNew = true;
+                image = this.editData.iconImage;
+                this.editData.iconImage = '';
+                this.$refs.editaDataUploads.clearFiles();
+            }else{
+                image = this.data.iconImage;
+                this.data.iconImage = '';
+                this.$refs.uploads.clearFiles();
+            }
 
             const res = await this.callApi('post', 'app/delete_image', {
                 imageName: image
+
             });
 
             //If not deleted successfully
             if (res.status !== 200) {
                 this.data.iconImage = image;
                 this.i('The image was not able to be deleted');
+            }
+        },
+        closeEditModal() {
+            this.isEditingItem = false;
+            this.editModal = false;
+        },
+        unprocessableEntityError() {
+            if (res.data.errors.categoryName) {
+                this.i(res.data.errors.categoryName[0]);
+            }
+            if (res.data.errors.iconImage) {
+                this.i(res.data.errors.iconImage[0]);
             }
         }
     },

@@ -2065,6 +2065,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2079,6 +2103,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isAdding: false,
       categories: [],
       editData: {
+        iconImage: '',
         categoryName: ''
       },
       index: -1,
@@ -2086,7 +2111,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isDeleting: false,
       deleteItem: {},
       deletingIndex: -1,
-      token: ''
+      token: '',
+      isIconImageNew: false,
+      isEditingItem: false
     };
   },
   methods: {
@@ -2115,7 +2142,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.abrupt("return", _this.e('Icon image is required'));
 
               case 4:
-                _this.data.iconImage = "/uploads/".concat(_this.data.iconImage); //axios call from common.js
+                _this.data.iconImage = "".concat(_this.data.iconImage); //axios call from common.js
 
                 _context.next = 7;
                 return _this.callApi('post', '/app/create_category', _this.data);
@@ -2134,13 +2161,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.data.iconImage = '';
                 } else {
                   if (res.status === 422) {
-                    if (res.data.errors.categoryName) {
-                      _this.i(res.data.errors.categoryName[0]);
-                    }
-
-                    if (res.data.errors.iconImage) {
-                      _this.i(res.data.errors.iconImage[0]);
-                    }
+                    _this.unprocessableEntityError();
                   } else {
                     _this.swr();
                   }
@@ -2154,7 +2175,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    editTag: function editTag() {
+    editCategory: function editCategory() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
@@ -2171,30 +2192,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context2.abrupt("return", _this2.e('Category name is required'));
 
               case 2:
-                _context2.next = 4;
-                return _this2.callApi('post', 'app/edit_category', _this2.editData);
+                if (!(_this2.editData.iconImage.trim() === '')) {
+                  _context2.next = 4;
+                  break;
+                }
+
+                return _context2.abrupt("return", _this2.e('Icon image is required'));
 
               case 4:
+                _context2.next = 6;
+                return _this2.callApi('post', 'app/edit_category', _this2.editData);
+
+              case 6:
                 res = _context2.sent;
 
                 if (res.status === 200) {
-                  //Go to tag index and replace with edited tag name
+                  //Go to category index and replace with edited tag name
                   _this2.categories[_this2.index].categoryName = _this2.editData.categoryName;
 
-                  _this2.s('Category has been edited successfully');
+                  _this2.s('Category has been edited successfully!');
 
                   _this2.editModal = false;
                 } else {
                   if (res.status === 422) {
-                    if (res.data.errors.categoryName) {
-                      _this2.i(res.data.errors.categoryName[0]);
-                    }
+                    _this2.unprocessableEntityError();
                   } else {
                     _this2.swr();
                   }
                 }
 
-              case 6:
+              case 8:
               case "end":
                 return _context2.stop();
             }
@@ -2204,13 +2231,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     showEditModal: function showEditModal(category, index) {
       //Assign data to be usable in editData v-model
-      var obj = {
-        id: category.id,
-        categoryName: category.categoryName
-      };
-      this.editData = obj;
+      this.editData = category;
       this.editModal = true;
       this.index = index;
+      this.isEditingItem = true;
     },
     deleteCategory: function deleteCategory() {
       var _this3 = this;
@@ -2261,7 +2285,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     handleSuccess: function handleSuccess(res) {
-      //When file is uploaded
+      res = "/uploads/".concat(res);
+
+      if (this.isEditingItem) {
+        return this.editData.iconImage = res;
+      } //When file is uploaded
+
+
       this.data.iconImage = res;
     },
     handleError: function handleError(res, file) {
@@ -2283,26 +2313,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     deleteImage: function deleteImage() {
-      var _this4 = this;
+      var _arguments = arguments,
+          _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        var image, res;
+        var isAdd, image, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                //Delete image before upload
-                image = _this4.data.iconImage;
-                _this4.data.iconImage = '';
+                isAdd = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : true;
 
-                _this4.$refs.uploads.clearFiles();
+                if (!isAdd) {
+                  //For editing
+                  _this4.isIconImageNew = true;
+                  image = _this4.editData.iconImage;
+                  _this4.editData.iconImage = '';
 
-                _context4.next = 5;
+                  _this4.$refs.editaDataUploads.clearFiles();
+                } else {
+                  image = _this4.data.iconImage;
+                  _this4.data.iconImage = '';
+
+                  _this4.$refs.uploads.clearFiles();
+                }
+
+                _context4.next = 4;
                 return _this4.callApi('post', 'app/delete_image', {
                   imageName: image
                 });
 
-              case 5:
+              case 4:
                 res = _context4.sent;
 
                 //If not deleted successfully
@@ -2312,13 +2353,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.i('The image was not able to be deleted');
                 }
 
-              case 7:
+              case 6:
               case "end":
                 return _context4.stop();
             }
           }
         }, _callee4);
       }))();
+    },
+    closeEditModal: function closeEditModal() {
+      this.isEditingItem = false;
+      this.editModal = false;
+    },
+    unprocessableEntityError: function unprocessableEntityError() {
+      if (res.data.errors.categoryName) {
+        this.i(res.data.errors.categoryName[0]);
+      }
+
+      if (res.data.errors.iconImage) {
+        this.i(res.data.errors.iconImage[0]);
+      }
     }
   },
   created: function created() {
@@ -88891,9 +88945,7 @@ var render = function() {
               _vm._v(" "),
               _vm.data.iconImage
                 ? _c("div", { staticClass: "demo-upload-list" }, [
-                    _c("img", {
-                      attrs: { src: "/uploads/" + _vm.data.iconImage }
-                    }),
+                    _c("img", { attrs: { src: "" + _vm.data.iconImage } }),
                     _vm._v(" "),
                     _c(
                       "div",
@@ -88978,6 +89030,85 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+              _c("div", { staticClass: "space" }),
+              _vm._v(" "),
+              _c(
+                "Upload",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.isIconImageNew,
+                      expression: "isIconImageNew"
+                    }
+                  ],
+                  ref: "editaDataUploads",
+                  attrs: {
+                    type: "drag",
+                    headers: {
+                      "x-csrf-token": _vm.token,
+                      "X-Requested-With": "XMLHttpRequest"
+                    },
+                    "on-success": _vm.handleSuccess,
+                    "on-error": _vm.handleError,
+                    "max-size": 2048,
+                    "on-exceeded-size": _vm.handleMaxSize,
+                    format: [
+                      "jpg",
+                      "jpeg",
+                      "png",
+                      "bmp",
+                      "docx",
+                      "txt",
+                      "xlsx",
+                      "xlsm",
+                      "pdf",
+                      "doc"
+                    ],
+                    "on-format-error": _vm.handleFormatError,
+                    action: "/app/upload"
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticStyle: { padding: "20px 0" } },
+                    [
+                      _c("Icon", {
+                        staticStyle: { color: "#3399ff" },
+                        attrs: { type: "ios-cloud-upload", size: "52" }
+                      }),
+                      _vm._v(" "),
+                      _c("p", [_vm._v("Click or drag files here to upload")])
+                    ],
+                    1
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm.editData.iconImage
+                ? _c("div", { staticClass: "demo-upload-list" }, [
+                    _c("img", { attrs: { src: "" + _vm.editData.iconImage } }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "demo-upload-list-cover" },
+                      [
+                        _c("Icon", {
+                          attrs: { type: "ios-trash-outline" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteImage(false)
+                            }
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "div",
                 { attrs: { slot: "footer" }, slot: "footer" },
@@ -88986,11 +89117,7 @@ var render = function() {
                     "Button",
                     {
                       attrs: { type: "default" },
-                      on: {
-                        click: function($event) {
-                          _vm.editModal = false
-                        }
-                      }
+                      on: { click: _vm.closeEditModal }
                     },
                     [_vm._v("Close")]
                   ),
@@ -89003,7 +89130,7 @@ var render = function() {
                         disabled: _vm.isAdding,
                         loading: _vm.isAdding
                       },
-                      on: { click: _vm.editTag }
+                      on: { click: _vm.editCategory }
                     },
                     [
                       _vm._v(
