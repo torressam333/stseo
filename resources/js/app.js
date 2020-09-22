@@ -1,9 +1,10 @@
 require('./bootstrap');
 window.Vue = require('vue');
-import router from "./router";
+import router from './router';
+import store from './store'
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
-import moment from 'moment';
+
 Vue.use(ViewUI);
 
 import common from "./common";
@@ -13,5 +14,6 @@ Vue.component('mainapp', require('./components/mainapp.vue').default);
 
 const app = new Vue({
    el: '#app',
-    router
+    router,
+    store
 });

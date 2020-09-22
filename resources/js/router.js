@@ -11,12 +11,17 @@ import methods from './components/pages/basic/methods'
 import home from './components/pages/home';
 import tags from './admin/pages/tags';
 import category from './admin/pages/category'
+import usecomp from './vuex/usecomp';
 
 const routes = [
     /*Admin Project routes*/
     {
       path: '/',
       component: home
+    },
+    {
+        path: '/testvuex',
+        component: usecomp
     },
     {
         path: '/tags',
