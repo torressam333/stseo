@@ -12,6 +12,11 @@ export default new Vuex.Store({
         changeCounter(state, payload) {
             state.counter += payload;
         }
+    },
+    getters: {
+        getCounter(state) {
+            return state.counter;
+        },
     }
 });
 

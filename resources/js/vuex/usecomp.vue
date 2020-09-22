@@ -3,7 +3,7 @@
         <div class="content">
             <div class="container-fluid">
                 <h1>Demonstration of how other components react to vue store</h1>
-                <h3>Parent components Current state of counter is: {{$store.state.counter}}</h3>
+                <h3>Parent components Current state of counter is: {{counter}}</h3>
                 <div>
                     <comp-a/>
                 </div>
@@ -25,8 +25,20 @@
 import compA from '../vuex/compA';
 import compB from '../vuex/compB';
 import compC from '../vuex/compC';
+import {mapGetters} from 'vuex';
 
 export default {
+    data() {
+        return {
+
+        }
+    },
+    computed: {
+        ...mapGetters({
+            //If you want to re-name the getter from your store
+            'counter': 'getCounter'
+        })
+    },
     created() {
         console.log(compA)
     },
