@@ -2902,7 +2902,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -2925,7 +2924,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     changeCounter: function changeCounter() {
-      this.$store.commit('changeCounter', 1);
+      //Dispatch an action
+      this.$store.dispatch('changeCounterAction', 1);
     }
   }
 });
@@ -107808,11 +107808,21 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   state: {
     counter: 1000
   },
+  //Mutations take a call from an action and update the state.
+  //Mutations are used to commit + track State changes
   mutations: {
     changeCounter: function changeCounter(state, payload) {
       state.counter += payload;
     }
   },
+  //Actions call mutations
+  actions: {
+    changeCounterAction: function changeCounterAction(_ref, payload) {
+      var commit = _ref.commit;
+      commit('changeCounter', payload);
+    }
+  },
+  //Used to access state
   getters: {
     getCounter: function getCounter(state) {
       return state.counter;

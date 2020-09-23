@@ -16,7 +16,6 @@
 
                 <Button type="info" @click="changeCounter">Change the state of the counter</Button>
             </div>
-
         </div>
     </div>
 </template>
@@ -25,7 +24,7 @@
 import compA from '../vuex/compA';
 import compB from '../vuex/compB';
 import compC from '../vuex/compC';
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
     data() {
@@ -49,7 +48,8 @@ export default {
     },
     methods: {
         changeCounter() {
-            this.$store.commit('changeCounter', 1)
+            //Dispatch an action
+            this.$store.dispatch('changeCounterAction', 1)
         }
     }
 }
