@@ -134,24 +134,7 @@
                     </div>
                 </Modal>
 
-                <!--Delete tag modal-->
-                <Modal v-model="showDeleteModal" width="360">
-                    <p slot="header" style="color:#e70000;text-align:center">
-                        <Icon type="ios-information-circle"></Icon>
-                        <span>Delete confirmation</span>
-                    </p>
-                    <div style="text-align:center">
-                        <p>Are you sure you want to delete this category?</p>
-                    </div>
-                    <div slot="footer">
-                        <Button type="error" size="large" long
-                                :loading="isDeleting"
-                                :disabled="isDeleting"
-                                @click="deleteCategory"
-                        >Delete
-                        </Button>
-                    </div>
-                </Modal>
+                <deleteModal></deleteModal>
             </div>
         </div>
     </div>
@@ -159,8 +142,10 @@
 
 <script>
 import moment from 'moment';
+import DeleteModal from "../components/deleteModal";
 
 export default {
+    components: {DeleteModal},
     data() {
         return {
             data: {
