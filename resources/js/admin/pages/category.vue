@@ -134,6 +134,7 @@
                     </div>
                 </Modal>
 
+                <!--Delete modal component-->
                 <deleteModal></deleteModal>
             </div>
         </div>
@@ -143,6 +144,7 @@
 <script>
 import moment from 'moment';
 import DeleteModal from "../components/deleteModal";
+import {mapGetters} from "vuex";
 
 export default {
     components: {DeleteModal},
@@ -217,25 +219,15 @@ export default {
             this.index = index;
             this.isEditingItem = true;
         },
-        async deleteCategory() {
-            //When deletion is in process
-            this.isDeleting = true;
-            const res = await this.callApi('post', 'app/delete_category', this.deleteItem);
-            if (res.status === 200) {
-                this.categories.splice(this.deletingIndex, 1);
-                this.s('Category has been deleted successfully')
-            } else {
-                this.swr();
-            }
-            //When deletion is complete
-            this.isDeleting = false;
-            //Close modal when deletion is complete
-            this.showDeleteModal = false;
-        },
         showDeletingModal(category, i) {
-            this.deleteItem = category;
-            this.deletingIndex = i;
-            this.showDeleteModal = true;
+            const deleteModalObj = {
+                showDeleteModal: true,
+                deleteUrl: 'app/delete_category',
+                data: category,
+                deletingIndex: i,
+                isDeleted: false
+            };
+            this.$store.commit('setDeletingModalObj', deleteModalObj);
         },
         format_date(value) {
             if (value) {
@@ -317,6 +309,16 @@ export default {
             this.categories = res.data;
         } else {
             this.swr();
+        }
+    },
+    computed: {
+        ...mapGetters(['getDeleteModalObj'])
+    },
+    watch: {
+        getDeleteModalObj(obj) {
+            if (obj.isDeleted) {
+                this.categories.splice(obj.deletingIndex, 1);
+            }
         }
     }
 }

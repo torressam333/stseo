@@ -72,14 +72,16 @@ class AdminController extends Controller
     public function deleteImage(Request $request)
     {
         $fileName = $request->imageName;
-        $this->deleteFileFromServer($fileName);
+        $this->deleteFileFromServer($fileName, false);
         return 'Deleted File';
     }
 
-    public function deleteFileFromServer($fileName)
+    public function deleteFileFromServer($fileName, $hasFullPath = false)
     {
-        $filePath = public_path(). '/uploads/'. $fileName;
-        file_exists($filePath) ? @unlink($filePath) : null;
+        if (!$hasFullPath) {
+            $filePath = public_path(). '/uploads/'. $fileName;
+            file_exists($filePath) ? @unlink($filePath) : null;
+        }
     }
 
     public function addCategory(Request $request)
@@ -102,6 +104,9 @@ class AdminController extends Controller
 
     public function deleteCategory(Request $request)
     {
+        //Delete file from server
+        $this->deleteFileFromServer($request->iconImage);
+
         //Validate the request
         $this->validate($request, [
             'id' => 'required'
