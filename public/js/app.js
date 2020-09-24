@@ -1998,7 +1998,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   _this.$store.commit('setDeleteModal', false);
                 }
 
-              case 5:
+                _this.isDeleting = false;
+
+              case 6:
               case "end":
                 return _context.stop();
             }
