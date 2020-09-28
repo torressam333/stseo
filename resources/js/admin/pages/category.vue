@@ -66,7 +66,7 @@
                         action="/app/upload">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                            <p>Click or drag files here to upload</p>
+                            <p>Click or drag files to upload</p>
                         </div>
                     </Upload>
                     <!--Show thumbnail for any image files-->
