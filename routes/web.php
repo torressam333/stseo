@@ -29,7 +29,9 @@ Route::get('app/get_categories', 'AdminController@getCategories');
 Route::post('app/delete_category', 'AdminController@deleteCategory');
 Route::post('app/edit_category', 'AdminController@editCategory');
 
-
+/*Admin user creation routes*/
+Route::post('app/create_user', 'AdminController@createUser');
+Route::get('app/get_users', 'AdminController@getUser');
 
 
 Route::get('/', function () {

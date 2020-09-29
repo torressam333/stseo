@@ -10,7 +10,8 @@ import methods from './components/pages/basic/methods'
 /*Admin Project Pages*/
 import home from './components/pages/home';
 import tags from './admin/pages/tags';
-import category from './admin/pages/category'
+import category from './admin/pages/category';
+import adminusers from './admin/pages/adminusers';
 
 const routes = [
     /*Admin Project routes*/
@@ -25,6 +26,10 @@ const routes = [
     {
         path: '/category',
         component: category
+    },
+    {
+        path: '/adminusers',
+        component: adminusers
     },
 
 /*End Project Routes*/
