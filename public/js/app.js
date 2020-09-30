@@ -90124,7 +90124,7 @@ var render = function() {
                             _c("td", [_vm._v(_vm._s(tag.id))]),
                             _vm._v(" "),
                             _c("td", { staticClass: "_table_name" }, [
-                              _vm._v(_vm._s(tag.tagName))
+                              _vm._v(_vm._s(tag.tagname))
                             ]),
                             _vm._v(" "),
                             _c("td", [

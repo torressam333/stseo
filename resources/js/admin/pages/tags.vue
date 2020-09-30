@@ -25,7 +25,7 @@
                             <!-- Display Tags From DB -->
                             <tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
                                 <td>{{tag.id}}</td>
-                                <td class="_table_name">{{tag.tagName}}</td>
+                                <td class="_table_name">{{tag.tagname}}</td>
                                 <td>{{format_date(tag.created_at)}}</td>
                                 <td>
                                     <Button type="info" size="small" @click="showEditModal(tag, i)">Edit</Button>

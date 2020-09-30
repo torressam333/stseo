@@ -14,24 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 /*Tag Routes*/
-Route::post('app/create_tag', 'AdminController@addTag');
-Route::post('app/edit_tag', 'AdminController@editTag');
-Route::get('app/get_tags', 'AdminController@getTag');
-Route::post('app/delete_tag', 'AdminController@deleteTag');
+Route::post('app/create_tag', 'TagsController@addTag');
+Route::post('app/edit_tag', 'TagsController@editTag');
+Route::get('app/get_tags', 'TagsController@getTag');
+Route::post('app/delete_tag', 'TagsController@deleteTag');
 
 /*Images and files routes*/
-Route::post('app/upload', 'AdminController@upload');
-Route::post('app/delete_image', 'AdminController@deleteImage');
+Route::post('app/upload', 'CategoriesController@upload');
+Route::post('app/delete_image', 'CategoriesController@deleteImage');
 
 /*Categories Routes*/
-Route::post('app/create_category', 'AdminController@addCategory');
-Route::get('app/get_categories', 'AdminController@getCategories');
-Route::post('app/delete_category', 'AdminController@deleteCategory');
-Route::post('app/edit_category', 'AdminController@editCategory');
+Route::post('app/create_category', 'CategoriesController@addCategory');
+Route::get('app/get_categories', 'CategoriesController@getCategories');
+Route::post('app/delete_category', 'CategoriesController@deleteCategory');
+Route::post('app/edit_category', 'CategoriesController@editCategory');
 
 /*Admin user creation routes*/
-Route::post('app/create_user', 'AdminController@createUser');
-Route::get('app/get_users', 'AdminController@getUser');
+Route::post('app/create_user', 'AdminUserController@createUser');
+Route::get('app/get_users', 'AdminUserController@getUser');
 
 
 Route::get('/', function () {
