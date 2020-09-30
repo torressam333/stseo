@@ -86,20 +86,39 @@
                 <!--Edit tag modal-->
                 <Modal
                     v-model="editModal"
-                    title="Edit tag"
+                    title="Edit Admin User"
                     :mask-closable="false"
                     :closable="false"
                 >
-                    <Input v-model="editData.tagName" placeholder="Edit tag name"/>
+
+                    <div class="space">
+                        <Input type="text" v-model="editData.fullName" placeholder="Edit Full Name"/>
+                    </div>
+
+                    <div class="space">
+                        <Input type="text" v-model="editData.email" placeholder="Email"/>
+                    </div>
+
+                    <div class="space">
+                        <Input type="password" v-model="editData.password" placeholder="Password"/>
+                    </div>
+
+                    <div class="space">
+                        <Select v-model="editData.userType" placeholder="Select admin type...">
+                            <Option  value="Admin">Admin</Option>
+                            <Option  value="Editor">Editor</Option>
+                        </Select>
+                    </div>
+
 
                     <div slot="footer">
                         <Button type="default" @click="editModal=false">Close</Button>
                         <Button
                             type="info"
-                            @click="editTag"
+                            @click="editAdmin"
                             :disabled="isAdding"
                             :loading="isAdding"
-                        >{{ isAdding ? 'Editing...' : 'Edit tag' }}
+                        >{{ isAdding ? 'Editing...' : 'Edit admin user' }}
                         </Button>
                     </div>
                 </Modal>
@@ -132,7 +151,10 @@ export default {
             isAdding: false,
             users: [],
             editData: {
-                tagName: ''
+                fullName: '',
+                email: '',
+                password: '',
+                userType: ''
             },
             index: -1,
             showDeleteModal: false,
@@ -169,29 +191,34 @@ export default {
                 }
             }
         },
-        async editTag() {
-            if (this.editData.tagName.trim() === '') return this.e('Tag name is required')
-            const res = await this.callApi('post', 'app/edit_tag', this.editData);
+        async editAdmin() {
+            if (this.editData.fullName.trim() === '') return this.e('A name is required');
+            if (this.editData.email.trim() === '') return this.e('An email is required');
+            if (this.editData.userType.trim() === '') return this.e('An admin type is required');
+
+            const res = await this.callApi('post', 'app/edit_user', this.editData);
             if (res.status === 200) {
                 //Go to tag index and replace with edited tag name
-                this.tags[this.index].tagName = this.editData.tagName;
-                this.s('Tag has been edited successfully');
+                this.users[this.index] = this.editData;
+                this.s('Admin user has been edited successfully');
                 this.editModal = false;
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.tagName) {
-                        this.i(res.data.errors.tagName[0]);
+                    for (let i in res.data.errors) {
+                        this.e(res.data.errors[i][0]);
                     }
                 } else {
                     this.swr();
                 }
             }
         },
-        showEditModal(tag, index) {
+        showEditModal(user, index) {
             //Assign data to be usable in editData v-model
             let obj = {
-                id: tag.id,
-                tagName: tag.tagName
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                userType: user.userType,
             }
             this.editData = obj;
             this.editModal = true;

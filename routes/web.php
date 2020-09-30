@@ -32,6 +32,7 @@ Route::post('app/edit_category', 'CategoriesController@editCategory');
 /*Admin user creation routes*/
 Route::post('app/create_user', 'AdminUserController@createUser');
 Route::get('app/get_users', 'AdminUserController@getUser');
+Route::post('app/edit_user', 'AdminUserController@editUser');
 
 
 Route::get('/', function () {
