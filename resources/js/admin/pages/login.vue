@@ -43,6 +43,7 @@ export default {
 
             if (res.status === 200) {
                 this.s(res.data.msg);
+                window.location.href = '/';
             } else {
                 if (res.status === 401) {
                     this.e(res.data.msg);
