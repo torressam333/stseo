@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -74,5 +75,31 @@ class AdminUserController extends Controller
 
         //Return if user changes data
         return User::where('id', $request->id)->update($data);
+    }
+
+    public function adminLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'bail|required|email',
+            'password' => 'bail|required|min:6'
+        ]);
+
+        //Login
+        if (Auth::attempt(
+            [
+                'email' => $request->email,
+                'password' => $request->password
+            ]))
+        {
+            return response()->json([
+               'msg' => 'You are logged in'
+            ]);
+        }else{
+            return response()->json([
+                'msg' => 'Incorrect login credentials'
+            ], 401);
+        }
+
+
     }
 }

@@ -12,6 +12,7 @@ import home from './components/pages/home';
 import tags from './admin/pages/tags';
 import category from './admin/pages/category';
 import adminusers from './admin/pages/adminusers';
+import login from './admin/pages/login';
 
 const routes = [
     /*Admin Project routes*/
@@ -30,6 +31,10 @@ const routes = [
     {
         path: '/adminusers',
         component: adminusers
+    },
+    {
+        path: '/login',
+        component: login
     },
 
 /*End Project Routes*/

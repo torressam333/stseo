@@ -33,6 +33,8 @@ Route::post('app/edit_category', 'CategoriesController@editCategory');
 Route::post('app/create_user', 'AdminUserController@createUser');
 Route::get('app/get_users', 'AdminUserController@getUser');
 Route::post('app/edit_user', 'AdminUserController@editUser');
+Route::post('app/admin_login', 'AdminUserController@adminLogin');
+
 
 
 Route::get('/', function () {
