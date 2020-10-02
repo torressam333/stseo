@@ -14,6 +14,17 @@ export default new Vuex.Store({
             deletingIndex: -1,
             isDeleted: false
         },
+        user: false,
+    },
+
+    //getters are used to access state
+    getters: {
+        getCounter(state) {
+            return state.counter;
+        },
+        getDeleteModalObj(state) {
+            return state.deleteModalObj;
+        }
     },
     //Mutations take a call from an action and update the state.
     //Mutations are used to commit + track State changes
@@ -32,6 +43,9 @@ export default new Vuex.Store({
         },
         setDeletingModalObj(state, data) {
             state.deleteModalObj = data;
+        },
+        updateUser(state, data) {
+            state.user = data
         }
     },
     //Actions call mutations
@@ -39,15 +53,6 @@ export default new Vuex.Store({
         changeCounterAction({commit}, payload) {
             commit('changeCounter', payload)
         }
-    },
-    //Used to access state
-    getters: {
-        getCounter(state) {
-            return state.counter;
-        },
-        getDeleteModalObj(state) {
-            return state.deleteModalObj;
-        }
-    },
+    }
 });
 
