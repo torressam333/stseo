@@ -30,17 +30,12 @@ Route::post('app/delete_category', 'CategoriesController@deleteCategory');
 Route::post('app/edit_category', 'CategoriesController@editCategory');
 
 /*Admin user creation routes*/
+Route::get('/', 'AdminUserController@index');
+Route::get('/logout', 'AdminUserController@logout');
 Route::post('app/create_user', 'AdminUserController@createUser');
 Route::get('app/get_users', 'AdminUserController@getUser');
 Route::post('app/edit_user', 'AdminUserController@editUser');
 Route::post('app/admin_login', 'AdminUserController@adminLogin');
+Route::any('{slug}', 'AdminUserController@index');
 
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::any('/{slug}', function () {
-    return view('welcome');
-});

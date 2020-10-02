@@ -19,6 +19,33 @@ class AdminUserController extends Controller
      * @throws ValidationException
      */
 
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!Auth::check() && $request->path() !== 'login') {
+            return redirect('/login');
+        } elseif (!Auth::check() && $request->path() === 'login') {
+            return view('welcome');
+        }
+
+        if ($user->userType === 'User') {
+            return redirect('/login');
+        }
+
+        if ($request->path() === 'login'){
+            return redirect('/');
+        }
+
+        return view('welcome');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
+    }
+
     public function validateUsers(Request $request)
     {
         //Validate the request
@@ -89,10 +116,20 @@ class AdminUserController extends Controller
             [
                 'email' => $request->email,
                 'password' => $request->password
-            ]))
-        {
+            ]
+        )) {
+            //Get authenticated user
+            $user = Auth::user();
+            if($user->userType === 'User'){
+                Auth::logout();
+
+                return response()->json([
+                    'msg' => 'You do not have admin permissions'
+                ], 401);
+            }
             return response()->json([
-               'msg' => 'You are logged in'
+               'msg' => 'You are logged in',
+                'user' => $user,
             ]);
         }else{
             return response()->json([
