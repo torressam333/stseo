@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,29 +14,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Tag Routes*/
-Route::post('app/create_tag', 'TagsController@addTag');
-Route::post('app/edit_tag', 'TagsController@editTag');
-Route::get('app/get_tags', 'TagsController@getTag');
-Route::post('app/delete_tag', 'TagsController@deleteTag');
+Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
+    /*Tag Routes*/
+    Route::post('/create_tag', 'TagsController@addTag');
+    Route::post('/edit_tag', 'TagsController@editTag');
+    Route::get('/get_tags', 'TagsController@getTag');
+    Route::post('/delete_tag', 'TagsController@deleteTag');
 
-/*Images and files routes*/
-Route::post('app/upload', 'CategoriesController@upload');
-Route::post('app/delete_image', 'CategoriesController@deleteImage');
+    /*Images and files routes*/
+    Route::post('/upload', 'CategoriesController@upload');
+    Route::post('/delete_image', 'CategoriesController@deleteImage');
 
-/*Categories Routes*/
-Route::post('app/create_category', 'CategoriesController@addCategory');
-Route::get('app/get_categories', 'CategoriesController@getCategories');
-Route::post('app/delete_category', 'CategoriesController@deleteCategory');
-Route::post('app/edit_category', 'CategoriesController@editCategory');
+    /*Categories Routes*/
+    Route::post('/create_category', 'CategoriesController@addCategory');
+    Route::get('/get_categories', 'CategoriesController@getCategories');
+    Route::post('/delete_category', 'CategoriesController@deleteCategory');
+    Route::post('/edit_category', 'CategoriesController@editCategory');
 
-/*Admin user creation routes*/
+    /*Admin user creation routes*/
+    Route::post('/create_user', 'AdminUserController@createUser');
+    Route::get('/get_users', 'AdminUserController@getUser');
+    Route::post('/edit_user', 'AdminUserController@editUser');
+    Route::post('/admin_login', 'AdminUserController@adminLogin');
+});
+
+
+
 Route::get('/', 'AdminUserController@index');
 Route::get('/logout', 'AdminUserController@logout');
-Route::post('app/create_user', 'AdminUserController@createUser');
-Route::get('app/get_users', 'AdminUserController@getUser');
-Route::post('app/edit_user', 'AdminUserController@editUser');
-Route::post('app/admin_login', 'AdminUserController@adminLogin');
 Route::any('{slug}', 'AdminUserController@index');
 
 

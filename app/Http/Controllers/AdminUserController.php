@@ -22,10 +22,11 @@ class AdminUserController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $authCheck = Auth::check();
 
-        if (!Auth::check() && $request->path() !== 'login') {
+        if (!$authCheck && $request->path() !== 'login') {
             return redirect('/login');
-        } elseif (!Auth::check() && $request->path() === 'login') {
+        } elseif (!$authCheck && $request->path() === 'login') {
             return view('welcome');
         }
 
