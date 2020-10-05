@@ -36,6 +36,12 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     Route::get('/get_users', 'AdminUserController@getUser');
     Route::post('/edit_user', 'AdminUserController@editUser');
     Route::post('/admin_login', 'AdminUserController@adminLogin');
+
+    /*Role Routes*/
+    Route::post('/create_role', 'RolesController@addRole');
+    Route::get('/get_roles', 'RolesController@getRole');
+    Route::post('/edit_role', 'RolesController@editRole');
+    Route::post('/delete_role', 'RolesController@deleteRole');
 });
 
 

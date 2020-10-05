@@ -10,13 +10,13 @@
                 <span>Delete confirmation</span>
             </p>
             <div style="text-align:center">
-                <p>Are you sure you want to delete this Tag?</p>
+                <p>Are you sure you want to perform a delete operation?</p>
             </div>
             <div slot="footer">
                 <Button type="error" size="large"
                         :loading="isDeleting"
                         :disabled="isDeleting"
-                        @click="deleteTag"
+                        @click="deleteEntity"
                 >Delete
                 </Button>
                 <Button type="default" size="large" @click="closeModal">Close</Button>
@@ -38,12 +38,12 @@ export default {
         ...mapGetters(['getDeleteModalObj'])
     },
     methods: {
-        async deleteTag() {
+        async deleteEntity() {
             //When deletion is in process
             this.isDeleting = true;
             const res = await this.callApi('post', this.getDeleteModalObj.deleteUrl, this.getDeleteModalObj.data);
             if (res.status === 200) {
-                this.s('Tag has been deleted successfully')
+                this.s('Successful deletion')
                 this.$store.commit('setDeleteModal', true);
             } else {
                 this.swr();
