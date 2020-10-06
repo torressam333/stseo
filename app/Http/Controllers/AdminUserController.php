@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -121,9 +122,10 @@ class AdminUserController extends Controller
         )) {
             //Get authenticated user
             $user = Auth::user();
-            if($user->userType === 'User'){
-                Auth::logout();
 
+            //Not an admin
+            if($user->role->isAdmin === 0){
+                Auth::logout();
                 return response()->json([
                     'msg' => 'You do not have admin permissions'
                 ], 401);

@@ -28,7 +28,7 @@ class AdminCheck
             ], 403);
         }
 
-        if ($user->userType === 'User') {
+        if ($user->role->isAdmin === 0) {
             return response()->json([
                 'msg' => 'You are not authorized to access this page',
             ], 403);
