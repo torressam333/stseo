@@ -31,7 +31,7 @@ class AdminUserController extends Controller
             return view('welcome');
         }
 
-        if ($user->userType === 'User') {
+        if ($user->role->isAdmin === 0) {
             return redirect('/login');
         }
 
@@ -55,7 +55,7 @@ class AdminUserController extends Controller
             'fullName' => 'required|min:2',
             'email' => 'bail|required|email|unique:users|max:255',
             'password' => 'bail|required|min:6',
-            'userType' => 'required'
+            'role_id' => 'required'
         ]);
     }
 
@@ -71,13 +71,14 @@ class AdminUserController extends Controller
             'fullName' => $request->fullName,
             'email' => $request->email,
             'password' => $password,
-            'userType' => $request->userType
+            'role_id' => $request->role_id
         ]);
     }
 
     public function getUser()
     {
-        return User::where('userType', '!=', 'User')->get();
+        //Return all users who are not "users"
+        return User::where('role_id', '!=', 4)->get();
     }
 
     public function editUser(Request $request)
@@ -86,13 +87,13 @@ class AdminUserController extends Controller
             'fullName' => 'required|min:2',
             'email' => "bail|required|email|unique:users,email,$request->id",
             'password' => 'min:6',
-            'userType' => 'required'
+            'role_id' => 'required'
         ]);
 
         $data = [
             'fullName' => $request->fullName,
             'email' => $request->email,
-            'userType' => $request->userType
+            'role_id' => $request->role_id
         ];
 
         //If user us updating their current password

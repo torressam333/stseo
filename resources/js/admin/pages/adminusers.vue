@@ -18,7 +18,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>User Type</th>
+                                <th>Role ID</th>
                                 <th>Created at</th>
                                 <th>Action</th>
                             </tr>
@@ -29,7 +29,7 @@
                                 <td>{{user.id}}</td>
                                 <td class="_table_name">{{user.fullName}}</td>
                                 <td>{{user.email}}</td>
-                                <td>{{user.userType}}</td>
+                                <td>{{user.role_id}}</td>
                                 <td>{{format_date(user.created_at)}}</td>
                                 <td>
                                     <Button type="info" size="small" @click="showEditModal(user, i)">Edit</Button>
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <!--Add tag modal-->
+                <!--Add user modal-->
                 <Modal
                     v-model="addModal"
                     title="Add admin"
@@ -65,9 +65,12 @@
                     </div>
 
                     <div class="space">
-                        <Select v-model="data.userType" placeholder="Select admin type...">
-                            <Option  value="Admin">Admin</Option>
-                            <Option  value="Editor">Editor</Option>
+                        <Select v-model="data.role_id" placeholder="Select admin type...">
+                            <Option
+                                :value="role.id"
+                                v-for="(role, i) in roles" :key="i"
+                                v-if="roles.length"
+                            >{{role.roleName}}</Option>
                         </Select>
                     </div>
 
@@ -83,7 +86,7 @@
                     </div>
                 </Modal>
 
-                <!--Edit tag modal-->
+                <!--Edit user modal-->
                 <Modal
                     v-model="editModal"
                     title="Edit Admin User"
@@ -104,7 +107,7 @@
                     </div>
 
                     <div class="space">
-                        <Select v-model="editData.userType" placeholder="Select admin type...">
+                        <Select v-model="editData.role_id" placeholder="Select admin type...">
                             <Option  value="Admin">Admin</Option>
                             <Option  value="Editor">Editor</Option>
                         </Select>
@@ -143,7 +146,7 @@ export default {
                 fullName: '',
                 email: '',
                 password: '',
-                userType: ''
+                role_id: null
             },
             //Don't display modal by default
             addModal: false,
@@ -154,13 +157,15 @@ export default {
                 fullName: '',
                 email: '',
                 password: '',
-                userType: ''
+                role_id: null
             },
             index: -1,
             showDeleteModal: false,
             isDeleting: false,
             deleteItem: {},
-            deletingIndex: -1
+            deletingIndex: -1,
+            websiteSettings: [],
+            roles: []
         }
     },
     methods: {
@@ -168,10 +173,11 @@ export default {
             if (this.data.fullName.trim() === '') return this.e('A name is required');
             if (this.data.email.trim() === '') return this.e('An email is required');
             if (this.data.password.trim() === '') return this.e('A password is required');
-            if (this.data.userType.trim() === '') return this.e('An admin type is required');
+            if (!this.data.role_id) return this.e('An admin type is required');
 
             //axios call from common.js
             const res = await this.callApi('post', '/app/create_user', this.data);
+            console.log(this.data)
             if (res.status === 201) {
                 this.users.unshift(res.data)
                 this.s('Admin user has been added successfully!');
@@ -180,7 +186,6 @@ export default {
                 this.data.fullName = '';
                 this.data.email = '';
                 this.data.password = '';
-                this.data.userType = '';
             } else {
                 if (res.status === 422) {
                     for (let i in res.data.errors) {
@@ -194,7 +199,7 @@ export default {
         async editAdmin() {
             if (this.editData.fullName.trim() === '') return this.e('A name is required');
             if (this.editData.email.trim() === '') return this.e('An email is required');
-            if (this.editData.userType.trim() === '') return this.e('An admin type is required');
+            if (!this.editData.role_id) return this.e('An admin type is required');
 
             const res = await this.callApi('post', 'app/edit_user', this.editData);
             if (res.status === 200) {
@@ -218,7 +223,7 @@ export default {
                 id: user.id,
                 fullName: user.fullName,
                 email: user.email,
-                userType: user.userType,
+                role_id: user.role_id,
             }
             this.editData = obj;
             this.editModal = true;
@@ -242,10 +247,22 @@ export default {
         }
     },
     async created() {
-        const res = await this.callApi('get', 'app/get_users');
+        //These endpoints are called at the same time
+        const [res, resRole] = await Promise.all([
+            this.callApi('get', 'app/get_users'),
+            this.callApi('get', 'app/get_roles')
+        ]);
+
         if (res.status === 200) {
             //Fill the users[] in data
             this.users = res.data;
+        } else {
+            this.swr();
+        }
+
+        if (resRole.status === 200) {
+            //Fill the users[] in data
+            this.roles = resRole.data;
         } else {
             this.swr();
         }
