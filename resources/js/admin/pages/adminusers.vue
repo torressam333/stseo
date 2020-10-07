@@ -18,7 +18,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Role ID</th>
+                                <th>Admin Type</th>
                                 <th>Created at</th>
                                 <th>Action</th>
                             </tr>
