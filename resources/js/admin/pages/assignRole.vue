@@ -26,12 +26,12 @@
                             </tr>
                             <!-- TABLE TITLE -->
 
-                            <tr>
-                                <td>Blog</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                            <tr v-for="(r, i) in resources" :key="i">
+                                <td>{{r.resourceName}}</td>
+                                <td><Checkbox v-model="r.read"></Checkbox></td>
+                                <td><Checkbox v-model="r.write"></Checkbox></td>
+                                <td><Checkbox v-model="r.update"></Checkbox></td>
+                                <td><Checkbox v-model="r.delete"></Checkbox></td>
                             </tr>
                             <!-- ITEMS -->
                         </table>
@@ -52,19 +52,60 @@ export default {
                 roleName: '',
                 role_id: null
             },
-            resources: [],
             roles: [],
-        }
-    },
-    methods: {
-        format_date(value) {
-            if (value) {
-                return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
-            }
+            resources: [
+                {
+                    resourceName: 'Dashboard',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'home',
+                },
+                {
+                    resourceName: 'Tags',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'tags',
+                },
+                {
+                    resourceName: 'Categories',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'category',
+                },
+                {
+                    resourceName: 'Admin Users',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'adminusers',
+                },
+                {
+                    resourceName: 'Role Management',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'role',
+                },
+                {
+                    resourceName: 'Role Assignment',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'assignRole',
+                },
+            ],
         }
     },
     async created() {
-        console.log(this.$route)
         const res = await this.callApi('get', 'app/get_roles');
         if (res.status === 200) {
             //Fill the roles[] in data
