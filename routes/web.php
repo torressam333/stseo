@@ -42,6 +42,9 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     Route::get('/get_roles', 'RolesController@getRole');
     Route::post('/edit_role', 'RolesController@editRole');
     Route::post('/delete_role', 'RolesController@deleteRole');
+
+    /*Role Permission Assignment Routes*/
+    Route::post('/assign_roles', 'RolePermissionsController@assignRolePermission');
 });
 
 

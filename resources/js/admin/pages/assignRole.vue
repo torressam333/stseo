@@ -5,7 +5,7 @@
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
                     <p class="_title0">Role Management
-                        <Select v-model="data.role_id" placeholder="Select admin type..." id="roleSelect">
+                        <Select v-model="data.id" id="roleSelect">
                             <Option
                                 :value="role.id"
                                 v-for="(role, i) in roles" :key="i"
@@ -34,6 +34,15 @@
                                 <td><Checkbox v-model="r.delete"></Checkbox></td>
                             </tr>
                             <!-- ITEMS -->
+                            <div class="center_button">
+                                <Button
+                                    class="center_button"
+                                    type="primary"
+                                    :loading="isSending"
+                                    :disabled="isSending"
+                                    @click="assignRoles"
+                                >Assign Permissions</Button>
+                            </div>
                         </table>
                     </div>
                 </div>
@@ -50,8 +59,9 @@ export default {
         return {
             data: {
                 roleName: '',
-                role_id: null
+                id: null
             },
+            isSending: false,
             roles: [],
             resources: [
                 {
@@ -105,11 +115,29 @@ export default {
             ],
         }
     },
+    methods: {
+        async assignRoles() {
+            let data = JSON.stringify(this.resources);
+            //Pass this data  and id to be used server-side in our controller
+            const res = await this.callApi('post', '/app/assign_roles', {'permission': data, id: this.data.id});
+            if (res.status === 200) {
+                this.s('Permissions successfully assigned');
+            }else{
+                this.swr();
+            }
+        }
+    },
     async created() {
         const res = await this.callApi('get', 'app/get_roles');
         if (res.status === 200) {
             //Fill the roles[] in data
             this.roles = res.data;
+            if (res.data.length) {
+                this.data.id = res.data[0].id;
+                if (res.data[0].permission) {
+                    this.resources = JSON.parse(res.data[0].permission);
+                }
+            }
         } else {
             this.swr();
         }
