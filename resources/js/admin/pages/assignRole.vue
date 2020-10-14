@@ -5,7 +5,7 @@
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
                     <p class="_title0">Role Management
-                        <Select v-model="data.id" id="roleSelect">
+                        <Select v-model="data.id" id="roleSelect" @on-change="changeAdmin">
                             <Option
                                 :value="role.id"
                                 v-for="(role, i) in roles" :key="i"
@@ -113,6 +113,56 @@ export default {
                     name: 'assignRole',
                 },
             ],
+            defaultResourcesPermission: [
+                {
+                    resourceName: 'Dashboard',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'home',
+                },
+                {
+                    resourceName: 'Tags',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'tags',
+                },
+                {
+                    resourceName: 'Categories',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'category',
+                },
+                {
+                    resourceName: 'Admin Users',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'adminusers',
+                },
+                {
+                    resourceName: 'Role Management',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'role',
+                },
+                {
+                    resourceName: 'Role Assignment',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'assignRole',
+                },
+            ],
         }
     },
     methods: {
@@ -122,8 +172,24 @@ export default {
             const res = await this.callApi('post', '/app/assign_roles', {'permission': data, id: this.data.id});
             if (res.status === 200) {
                 this.s('Permissions successfully assigned');
+                //Find role index and update permissions
+                let index = this.roles.findIndex(role => role.id === this.data.id);
+                this.roles[index].permission = data;
             }else{
                 this.swr();
+            }
+        },
+        changeAdmin() {
+            //Find matching index for role id and data id
+            let index = this.roles.findIndex(role => role.id === this.data.id);
+            //Get permissions based off role chosen (using index)
+            let permission = this.roles[index].permission;
+            if (!permission) {
+                //Assign the role default permissions if none exist
+                this.resources = this.defaultResourcesPermission;
+            }else{
+                //If a role has permissions, parse them into json data
+                this.resources = JSON.parse(permission);
             }
         }
     },
