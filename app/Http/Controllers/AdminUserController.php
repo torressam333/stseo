@@ -30,7 +30,7 @@ class AdminUserController extends Controller
         } elseif (!$authCheck && $request->path() === 'login') {
             return view('welcome');
         }
-
+        //Non-admins
         if ($user->role->isAdmin === 0) {
             return redirect('/login');
         }
@@ -39,7 +39,29 @@ class AdminUserController extends Controller
             return redirect('/');
         }
 
-        return view('welcome');
+        //return view('welcome');
+
+        return $this->checkPermissions($user, $request);
+    }
+
+    public function checkPermissions($user, Request $request)
+    {
+        //Get logged in user permissions
+        $permissions = json_decode($user->role->permission);
+
+        //Check for read permission
+        $hasPermission = false;
+
+        foreach ($permissions as $permission){
+            if ($permission->name === $request->path()) {
+                if ($permission->read) {
+                    $hasPermission = true;
+                }
+            }
+        }
+
+        if($hasPermission) return view('welcome');
+        return view('notfound');
     }
 
     public function logout()
