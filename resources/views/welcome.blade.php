@@ -19,6 +19,7 @@
         @if(Auth::check())
             <mainapp
                 :user="{{Auth::user()}}"
+                :permission="{{Auth::user()->role->permission}}"
             ></mainapp>
         @else
             <mainapp

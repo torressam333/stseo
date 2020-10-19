@@ -18,12 +18,14 @@
                     <!--~~~ MENU LIST ~~~~~~-->
                     <div class="_1side_menu_list">
                         <ul class="_1side_menu_list_ul">
-                            <li><router-link to="/"><Icon type="ios-home-outline" /> Dashboard</router-link></li>
-                            <li><router-link to="/tags"><Icon type="ios-pricetag-outline" /> Tags</router-link></li>
-                            <li><router-link to="/category"><Icon type="ios-speedometer" /> Category</router-link></li>
-                            <li><router-link to="/adminusers"><Icon type="ios-people-outline" /> Admin Users</router-link></li>
-                            <li><router-link to="/role"><Icon type="ios-people-outline" /> Role Management</router-link></li>
-                            <li><router-link to="/assignRole"><Icon type="ios-people-outline" /> Role Assignment</router-link></li>
+                            <li v-for="(menuItem, i) in permission"
+                                :key="i"
+                                v-if="permission.length && menuItem.read">
+                                <router-link :to="menuItem.name">
+                                    <Icon type="ios-home-outline" />
+                                    {{menuItem.resourceName}}
+                                </router-link>
+                            </li>
                             <li><a href="/logout"><Icon type="ios-log-out" /> Logout</a></li>
                         </ul>
                     </div>
@@ -52,7 +54,7 @@
 
 <script>
 export default {
-    props: ['user'],
+    props: ['user', 'permission'],
     data(){
         return {
             isLoggedIn: false,
