@@ -52,6 +52,10 @@ class AdminUserController extends Controller
         //Check for read permission
         $hasPermission = false;
 
+        if (!$permissions) {
+            return view('notfound');
+        }
+
         foreach ($permissions as $permission){
             if ($permission->name === $request->path()) {
                 if ($permission->read) {

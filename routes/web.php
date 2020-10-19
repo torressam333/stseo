@@ -44,7 +44,7 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     Route::post('/delete_role', 'RolesController@deleteRole');
 
     /*Role Permission Assignment Routes*/
-    Route::post('/assign_roles', 'RolePermissionsController@assignRolePermission');
+    Route::post('assign_roles','RolePermissionsController@assignRolePermission');
 });
 
 

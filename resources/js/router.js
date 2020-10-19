@@ -44,7 +44,7 @@ const routes = [
         name: 'role'
     },
     {
-        path: '/assign-role',
+        path: '/assignRole',
         component: assignRole,
         name: 'assignRole'
     },
