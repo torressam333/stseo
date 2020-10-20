@@ -62,8 +62,10 @@ export default {
     },
     created() {
         //mutation of updateUser in Vuex Store
-        this.$store.commit('updateUser', this.user);
-        console.log(this.user)
+        this.$store.commit('setUpdateUser', this.user);
+
+        //Update our vuex store with permissions mutation
+        this.$store.commit('setUserPermission', this.permission);
     }
 }
 </script>

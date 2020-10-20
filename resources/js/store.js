@@ -15,6 +15,7 @@ export default new Vuex.Store({
             isDeleted: false
         },
         user: false,
+        userPermission: null
     },
 
     //getters are used to access state
@@ -24,6 +25,9 @@ export default new Vuex.Store({
         },
         getDeleteModalObj(state) {
             return state.deleteModalObj;
+        },
+        getUserPermission(state) {
+            return state.userPermission;
         }
     },
     //Mutations take a call from an action and update the state.
@@ -44,8 +48,11 @@ export default new Vuex.Store({
         setDeletingModalObj(state, data) {
             state.deleteModalObj = data;
         },
-        updateUser(state, data) {
+        setUpdateUser(state, data) {
             state.user = data
+        },
+        setUserPermission(state, data) {
+            state.userPermission = data;
         }
     },
     //Actions call mutations

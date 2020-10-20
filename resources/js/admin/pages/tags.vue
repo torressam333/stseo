@@ -184,6 +184,7 @@ export default {
         }
     },
     async created() {
+        console.log(this.isDeletePermitted)
         const res = await this.callApi('get', 'app/get_tags');
         if (res.status === 200) {
             //Fill the tags[] in data
