@@ -5,7 +5,7 @@
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
                     <p class="_title0">Category
-                        <Button @click="addModal=true">
+                        <Button @click="addModal=true" v-if="isWritePermitted">
                             <Icon type="md-add">Default</Icon>
                             Add Category
                         </Button>
@@ -32,10 +32,17 @@
                                 <td class="_table_name">{{ category.categoryName }}</td>
                                 <td>{{ format_date(category.created_at) }}</td>
                                 <td>
-                                    <Button type="info" size="small" @click="showEditModal(category, i)">Edit</Button>
+                                    <Button
+                                        type="info"
+                                        size="small"
+                                        @click="showEditModal(category, i)"
+                                        v-if="isUpdatePermitted">
+                                        Edit
+                                    </Button>
                                     <Button type="error" size="small"
                                             @click="showDeletingModal(category, i)"
                                             :loading="category.isDeleting"
+                                            v-if="isDeletePermitted"
                                     >Delete
                                     </Button>
                                 </td>

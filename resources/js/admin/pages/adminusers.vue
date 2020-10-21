@@ -5,7 +5,7 @@
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
                     <p class="_title0">Admins
-                        <Button @click="addModal=true">
+                        <Button @click="addModal=true" v-if="isWritePermitted">
                             <Icon type="md-add">Default</Icon>
                             Add Admin
                         </Button>
@@ -32,10 +32,18 @@
                                 <td>{{user.role_id}}</td>
                                 <td>{{format_date(user.created_at)}}</td>
                                 <td>
-                                    <Button type="info" size="small" @click="showEditModal(user, i)">Edit</Button>
+                                    <Button
+                                        type="info"
+                                        size="small"
+                                        @click="showEditModal(user, i)"
+                                        v-if="isUpdatePermitted"
+                                    >
+                                        Edit
+                                    </Button>
                                     <Button type="error" size="small"
                                             @click="showDeletingModal(user, i)"
                                             :loading="user.isDeleting"
+                                            v-if="isDeletePermitted"
                                     >Delete
                                     </Button>
                                 </td>
