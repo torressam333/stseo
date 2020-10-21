@@ -89,6 +89,14 @@ export default {
                     name: 'category',
                 },
                 {
+                    resourceName: 'Create Blog',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'createBlog',
+                },
+                {
                     resourceName: 'Admin Users',
                     read: false,
                     write: false,
@@ -137,6 +145,14 @@ export default {
                     update: false,
                     delete: false,
                     name: 'category',
+                },
+                {
+                    resourceName: 'Create Blog',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'createBlog',
                 },
                 {
                     resourceName: 'Admin Users',

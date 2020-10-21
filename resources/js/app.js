@@ -4,7 +4,9 @@ import router from './router';
 import store from './store'
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
+import Editor from 'vue-editor-js';
 
+Vue.use(Editor)
 Vue.use(ViewUI);
 
 import common from "./common";
