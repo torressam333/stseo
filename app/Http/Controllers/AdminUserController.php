@@ -39,8 +39,6 @@ class AdminUserController extends Controller
             return redirect('/');
         }
 
-        //return view('welcome');
-
         return $this->checkPermissions($user, $request);
     }
 
@@ -65,6 +63,7 @@ class AdminUserController extends Controller
         }
 
         if($hasPermission) return view('welcome');
+
         return view('notfound');
     }
 

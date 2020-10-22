@@ -11,7 +11,7 @@
                         </Button>
                     </p>
 
-                    <div class="_overflow _table_div">
+                    <div class="_overflow _table_div blog_editor">
                         <editor
                             ref="editor"
                             autofocus
@@ -20,8 +20,14 @@
                             :init-data="initData"
                             @save="onSave"
                         />
+                    </div>
 
+                    <div class="_input_field">
+                        <Input type="text" placeholder="Your blog post title"/>
+                    </div>
+                    <div class="_input_field">
                         <Button @click="save">Save Data</Button>
+                    </div>
 
                     </div>
                 </div>
@@ -29,7 +35,6 @@
 
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -43,7 +48,10 @@ export default {
                     types: 'image/*',
                 },
             },
-            initData: null
+            initData: null,
+            data: {
+
+            }
         }
     },
     methods: {
@@ -82,5 +90,27 @@ export default {
 }
 </script>
 
+<style>
+.blog_editor {
+    width: 750px;
+    margin-left: 100px;
+    padding: 4px 7px;
+    font-size: 16px;
+    border: 1px solid #dcdee2;
+    border-radius: 5px;
+    color: #1b4b72;
+    background-color: #fff;
+    background-image: none;
+    z-index: -1;
+}
+.blog_editor:hover{
+    border: 1px solid #57a3f3;
+}
+
+._input_field{
+    margin: 20px 0 0 100px;
+    width: 750px;
+}
+</style>
 
 

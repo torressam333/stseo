@@ -70,7 +70,7 @@ export default {
                     write: false,
                     update: false,
                     delete: false,
-                    name: 'home',
+                    name: '/',
                 },
                 {
                     resourceName: 'Tags',
@@ -128,7 +128,7 @@ export default {
                     write: false,
                     update: false,
                     delete: false,
-                    name: 'home',
+                    name: '/',
                 },
                 {
                     resourceName: 'Tags',
