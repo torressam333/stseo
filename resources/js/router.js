@@ -20,7 +20,7 @@ import createBlog from './admin/pages/createBlog';
 const routes = [
     /*Admin Project routes*/
     {
-      path: '/',
+      path: '/home',
       component: home,
       name: 'home'
     },

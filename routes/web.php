@@ -47,9 +47,12 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     Route::post('assign_roles','RolePermissionsController@assignRolePermission');
 });
 
+//Blog Posts Routes
+Route::post('/createBlog', 'BlogPostsController@uploadEditorImage');
 
 
-Route::get('/', 'AdminUserController@index');
+//Login/Auth routes
+Route::get('/home', 'AdminUserController@index');
 Route::get('/logout', 'AdminUserController@logout');
 Route::any('{slug}', 'AdminUserController@index');
 

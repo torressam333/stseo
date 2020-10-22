@@ -19,6 +19,7 @@
                             save-button-id="save-button"
                             :init-data="initData"
                             @save="onSave"
+                            :config="config"
                         />
                     </div>
 
@@ -29,12 +30,10 @@
                         <Button @click="save">Save Data</Button>
                     </div>
 
-                    </div>
                 </div>
-
-
             </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -44,14 +43,16 @@ export default {
         return {
             config: {
                 image: {
+                endpoints: {
+                  byFile: 'http://localhost:8090/image',
+                  byUrl: 'http://localhost:8090/image-by-url'
+                },
                     field: 'image',
                     types: 'image/*',
                 },
             },
             initData: null,
-            data: {
-
-            }
+            data: {}
         }
     },
     methods: {
@@ -79,7 +80,7 @@ export default {
             console.log(response);
         },
         async save() {
-           this.$refs.editor.save();
+            this.$refs.editor.save();
         },
         format_date(value) {
             if (value) {
@@ -103,11 +104,12 @@ export default {
     background-image: none;
     z-index: -1;
 }
-.blog_editor:hover{
+
+.blog_editor:hover {
     border: 1px solid #57a3f3;
 }
 
-._input_field{
+._input_field {
     margin: 20px 0 0 100px;
     width: 750px;
 }
