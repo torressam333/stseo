@@ -82,7 +82,7 @@ export default {
         async onSave(response) {
             var data = response;
             await this.outputHtml(data.blocks);
-            console.log(this.articleHtml);
+            console.log(this.articleHTML);
         },
         async save() {
             this.$refs.editor.save();
