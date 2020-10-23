@@ -41,18 +41,21 @@
 export default {
     data() {
         return {
-            config: {
-                image: {
-                endpoints: {
-                  byFile: 'http://localhost:8090/image',
-                  byUrl: 'http://localhost:8090/image-by-url'
-                },
-                    field: 'image',
-                    types: 'image/*',
-                },
-            },
+            config: {},
             initData: null,
-            data: {}
+            data: {
+                title: '',
+                post: '',
+                post_excerpt: '',
+                metaDescription: '',
+                category_id: [],
+                tag_id: [],
+                jsonData: null
+            },
+            articleHTML: '',
+            category: [],
+            tag: [],
+            isCreating: false,
         }
     },
     methods: {
@@ -76,18 +79,79 @@ export default {
                 }
             }
         },
-        onSave(response) {
-            console.log(response);
+        async onSave(response) {
+            var data = response;
+            await this.outputHtml(data.blocks);
+            console.log(this.articleHtml);
         },
         async save() {
             this.$refs.editor.save();
+        },
+        outputHtml(articleObj) {
+            articleObj.map(obj => {
+                switch (obj.type) {
+                    case 'paragraph':
+                        this.articleHTML += this.makeParagraph(obj);
+                        break;
+                    case 'image':
+                        this.articleHTML += this.makeImage(obj);
+                        break;
+                    case 'header':
+                        this.articleHTML += this.makeHeader(obj);
+                        break;
+                    case 'raw':
+                        this.articleHTML += `<div class="ce-block">
+					<div class="ce-block__content">
+					<div class="ce-code">
+						<code>${obj.data.html}</code>
+					</div>
+					</div>
+				</div>\n`;
+                        break;
+                    case 'code':
+                        this.articleHTML += this.makeCode(obj);
+                        break;
+                    case 'list':
+                        this.articleHTML += this.makeList(obj)
+                        break;
+                    case "quote":
+                        this.articleHTML += this.makeQuote(obj)
+                        break;
+                    case "warning":
+                        this.articleHTML += this.makeWarning(obj)
+                        break;
+                    case "checklist":
+                        this.articleHTML += this.makeChecklist(obj)
+                        break;
+                    case "embed":
+                        this.articleHTML += this.makeEmbed(obj)
+                        break;
+                    case 'delimeter':
+                        this.articleHTML += this.makeDelimeter(obj);
+                        break;
+                    default:
+                        return '';
+                }
+            });
+        },
+        async created() {
+            const [cat, tag] = await Promise.all([
+                this.callApi('get', 'app/get_category'),
+                this.callApi('get', 'app/get_tags'),
+            ])
+            if (cat.status == 200) {
+                this.category = cat.data
+                this.tag = tag.data
+            } else {
+                this.swr()
+            }
         },
         format_date(value) {
             if (value) {
                 return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
             }
         }
-    }
+    }, //End methods
 }
 </script>
 
