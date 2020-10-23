@@ -36,7 +36,7 @@ class AdminUserController extends Controller
         }
 
         if ($request->path() === 'login'){
-            return redirect('/');
+            return redirect('/home');
         }
 
         return $this->checkPermissions($user, $request);
@@ -165,7 +165,5 @@ class AdminUserController extends Controller
                 'msg' => 'Incorrect login credentials'
             ], 401);
         }
-
-
     }
 }
