@@ -49,6 +49,7 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
 
 //Blog Posts Routes
 Route::post('/createBlog', 'BlogPostsController@uploadEditorImage');
+Route::get('slug', 'BlogPostsController@slug');
 
 
 //Login/Auth routes

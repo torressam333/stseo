@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Blog;
 use Illuminate\Http\Request;
 
 class BlogPostsController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function uploadEditorImage(Request $request)
     {
         $localServerUrl = \config('samsValues.localServerUrl');
@@ -23,7 +29,16 @@ class BlogPostsController extends Controller
                 'url' => $localServerUrl . 'uploads/' . $imageName,
             ]
         ]);
+    }
 
-        //return $imageName;
+    public function slug()
+    {
+        return Blog::create([
+            'title' => 'This is a nice title',
+            'post' => 'some post',
+            'postExcerpt' => 'some post here',
+            'user_id' => 11,
+            'metaDescription' => 'some meta info here',
+        ]);
     }
 }
