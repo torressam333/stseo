@@ -18,8 +18,16 @@ class Blog extends Model
         'views'
     ];
 
-    public function setTitleAttribute($title)
+    public function setSlugAttribute($title){
+        $this->attributes['slug'] = $this->uniqueSlug($title);
+    }
+
+    private function uniqueSlug($title)
     {
-        $this->attributes['slug'] = Str::slug($title); //Converts title to slug
+        $slug = Str::slug($title, '-');
+        $count = Blog::where('slug', 'LIKE', "{$slug}%")->count();
+        $newCount = $count > 0 ? ++$count : '';
+
+        return $newCount > 0 ? "$slug-$newCount" : $slug;
     }
 }
