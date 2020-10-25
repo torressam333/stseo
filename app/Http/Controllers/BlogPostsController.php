@@ -33,10 +33,12 @@ class BlogPostsController extends Controller
 
     public function slug()
     {
+        $title = 'Samuel Is Awesome';
         return Blog::create([
-            'title' => 'This is a nice title',
+            'title' => $title,
             'post' => 'some post',
             'postExcerpt' => 'some post here',
+            'slug' => $title,
             'user_id' => 11,
             'metaDescription' => 'some meta info here',
         ]);
