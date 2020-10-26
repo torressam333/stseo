@@ -128,6 +128,7 @@ export default {
             }else{
                 this.swr();
             }
+            this.isCreating = false;
 
         },
         async save() {
