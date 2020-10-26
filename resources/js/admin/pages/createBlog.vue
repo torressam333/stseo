@@ -11,6 +11,10 @@
                         </Button>
                     </p>
 
+                    <div class="_input_field">
+                        <Input type="text" v-model="data.title" placeholder="Blog Title"/>
+                    </div>
+
                     <div class="_overflow _table_div blog_editor">
                         <editor
                             ref="editor"
@@ -20,14 +24,42 @@
                             :init-data="initData"
                             @save="onSave"
                             :config="config"
+                            v-model="data.post"
                         />
                     </div>
 
                     <div class="_input_field">
-                        <Input type="text" placeholder="Your blog post title"/>
+                        <Input type="textarea" v-model="data.post_excerpt" :rows="4" placeholder="Post excerpt"/>
                     </div>
+
                     <div class="_input_field">
-                        <Button @click="save">Save Data</Button>
+                        <Select filterable multiple placeholder="Category" v-model="data.category_id">
+                            <Option v-for="(cat, index) in category"
+                                    :value="cat.id"
+                                    :key="index">
+                                {{cat.categoryName}}
+                            </Option>
+                        </Select>
+                    </div>
+
+                    <div class="_input_field">
+                        <Select filterable multiple placeholder="Tags" v-model="data.tag_id">
+                            <Option v-for="(tag, index) in tag"
+                                    :value="tag.id"
+                                    :key="index">
+                                {{tag.tagname}}
+                            </Option>
+                        </Select>
+                    </div>
+
+                    <div class="_input_field">
+                        <Input type="textarea" v-model="data.metaDescription" :rows="4" placeholder="Meta Description"/>
+                    </div>
+
+                    <div class="_input_field">
+                        <Button @click="save" :loading="isCreating" :disabled="isCreating">
+                            {{isCreating ? 'Creating...' : 'Create Blog'}}
+                        </Button>
                     </div>
 
                 </div>
@@ -35,7 +67,6 @@
         </div>
     </div>
 </template>
-
 <script>
 
 export default {
@@ -80,9 +111,11 @@ export default {
             }
         },
         async onSave(response) {
-            var data = response;
+            let data = response;
             await this.outputHtml(data.blocks);
-            console.log(this.articleHTML);
+            this.data.post = this.articleHTML;
+            this.data.jsonData = JSON.stringify(data);
+
         },
         async save() {
             this.$refs.editor.save();
@@ -134,24 +167,25 @@ export default {
                 }
             });
         },
-        async created() {
-            const [cat, tag] = await Promise.all([
-                this.callApi('get', 'app/get_category'),
-                this.callApi('get', 'app/get_tags'),
-            ])
-            if (cat.status == 200) {
-                this.category = cat.data
-                this.tag = tag.data
-            } else {
-                this.swr()
-            }
-        },
         format_date(value) {
             if (value) {
                 return moment(String(value)).format('MMM DD YYYY, h:mm:ss a');
             }
         }
     }, //End methods
+    async created() {
+        const [cat, tag] = await Promise.all([
+            this.callApi('get', 'app/get_categories'),
+            this.callApi('get', 'app/get_tags'),
+        ]);
+
+        if (cat.status === 200) {
+            this.category = cat.data
+            this.tag = tag.data
+        } else {
+            this.swr()
+        }
+    },
 }
 </script>
 
@@ -174,7 +208,12 @@ export default {
 }
 
 ._input_field {
-    margin: 20px 0 0 100px;
+    margin: 20px 0 20px 100px;
+    width: 750px;
+}
+
+._select_field {
+    margin: 20px 0 10px 100px;
     width: 750px;
 }
 </style>
