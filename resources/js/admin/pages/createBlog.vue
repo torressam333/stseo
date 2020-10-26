@@ -24,12 +24,11 @@
                             :init-data="initData"
                             @save="onSave"
                             :config="config"
-                            v-model="data.post"
                         />
                     </div>
 
                     <div class="_input_field">
-                        <Input type="textarea" v-model="data.post_excerpt" :rows="4" placeholder="Post excerpt"/>
+                        <Input type="textarea" v-model="data.postExcerpt" :rows="4" placeholder="Post excerpt"/>
                     </div>
 
                     <div class="_input_field">
@@ -77,7 +76,7 @@ export default {
             data: {
                 title: '',
                 post: '',
-                post_excerpt: '',
+                postExcerpt: '',
                 metaDescription: '',
                 category_id: [],
                 tag_id: [],
@@ -115,6 +114,20 @@ export default {
             await this.outputHtml(data.blocks);
             this.data.post = this.articleHTML;
             this.data.jsonData = JSON.stringify(data);
+            this.isCreating = true;
+
+            const res = await this.callApi('post', 'app/create_blog', this.data);
+            if (res.status === 201) {
+                this.s('Blog successfully created')
+                //reload current blog page
+                setTimeout(() =>
+                {
+                    window.location.reload();
+                },2500);
+
+            }else{
+                this.swr();
+            }
 
         },
         async save() {

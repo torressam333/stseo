@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BlogPostsController extends Controller
 {
@@ -41,6 +42,24 @@ class BlogPostsController extends Controller
             'slug' => $title,
             'user_id' => 11,
             'metaDescription' => 'some meta info here',
+        ]);
+    }
+
+    public function createBlog(Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required|min:2',
+            'post' => 'required|min:3',
+        ]);
+
+        return Blog::create([
+            'title' => $request->title,
+            'post' =>  $request->post,
+            'postExcerpt' => $request->postExcerpt,
+            'slug' => $request->title,
+            'user_id' => Auth::user()->id,
+            'metaDescription' => $request->metaDescription,
+            'jsonData' => $request->jsonData,
         ]);
     }
 }

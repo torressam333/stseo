@@ -15,7 +15,8 @@ class Blog extends Model
         'user_id',
         'featuredImage',
         'metaDescription',
-        'views'
+        'views',
+        'jsonData'
     ];
 
     public function setSlugAttribute($title){
