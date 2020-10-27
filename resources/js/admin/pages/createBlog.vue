@@ -125,7 +125,14 @@ export default {
                     window.location.reload();
                 },2500);
 
-            }else{
+            }else if (res.status === 422) {
+                if (res.data.errors.title) {
+                    this.e(res.data.errors.title[0]);
+                }
+                if (res.data.errors.post) {
+                    this.e(res.data.errors.post[0]);
+                }
+            } else {
                 this.swr();
             }
             this.isCreating = false;
