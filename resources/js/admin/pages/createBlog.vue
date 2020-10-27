@@ -117,13 +117,13 @@ export default {
             this.isCreating = true;
 
             const res = await this.callApi('post', 'app/create_blog', this.data);
-            if (res.status === 201) {
+            if (res.status === 200) {
                 this.s('Blog successfully created')
                 //reload current blog page
                 setTimeout(() =>
                 {
                     window.location.reload();
-                },2500);
+                },3000);
 
             }else if (res.status === 422) {
                 if (res.data.errors.title) {

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Blog;
+use App\Blogcategory;
+use App\Blogtag;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BlogPostsController extends Controller
 {
@@ -52,7 +56,14 @@ class BlogPostsController extends Controller
             'post' => 'required|min:3',
         ]);
 
-        return Blog::create([
+        $categories = $request->category_id;
+        $tags = $request->tag_id;
+        $blogCategories = [];
+        $blogTags = [];
+
+
+        //Create blog first
+        $blog = Blog::create([
             'title' => $request->title,
             'post' =>  $request->post,
             'postExcerpt' => $request->postExcerpt,
@@ -61,5 +72,25 @@ class BlogPostsController extends Controller
             'metaDescription' => $request->metaDescription,
             'jsonData' => $request->jsonData,
         ]);
+
+        //Create blog category
+        foreach ($categories as $category) {
+            array_push($blogCategories,
+                [
+                    'category_id' => $category,
+                    'blog_id' => $blog->id,
+                ]);
+        }
+
+        foreach ($tags as $tag) {
+        array_push($blogTags,
+            [
+                'tag_id' => $tag,
+                'blog_id' => $blog->id,
+            ]);
+    }
+
+        Blogcategory::insert($blogCategories);
+        Blogtag::insert($blogTags);
     }
 }
