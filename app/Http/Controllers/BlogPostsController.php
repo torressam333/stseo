@@ -5,24 +5,26 @@ namespace App\Http\Controllers;
 use App\Blog;
 use App\Blogcategory;
 use App\Blogtag;
-use Carbon\Traits\Date;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class BlogPostsController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function uploadEditorImage(Request $request)
     {
         $localServerUrl = \config('samsValues.localServerUrl');
 
         $this->validate($request, [
-           'image' => 'required|mimes:jpeg,jpg,png,tif,gif,eps,raw,psd,xcf,bmp'
+            'image' => 'required|mimes:jpeg,jpg,png,tif,gif,eps,raw,psd,xcf,bmp'
         ]);
 
         $imageName = time() . '.' . $request->image->extension();
@@ -61,36 +63,46 @@ class BlogPostsController extends Controller
         $blogCategories = [];
         $blogTags = [];
 
+        DB::beginTransaction();
 
-        //Create blog first
-        $blog = Blog::create([
-            'title' => $request->title,
-            'post' =>  $request->post,
-            'postExcerpt' => $request->postExcerpt,
-            'slug' => $request->title,
-            'user_id' => Auth::user()->id,
-            'metaDescription' => $request->metaDescription,
-            'jsonData' => $request->jsonData,
-        ]);
-
-        //Create blog category
-        foreach ($categories as $category) {
-            array_push($blogCategories,
-                [
-                    'category_id' => $category,
-                    'blog_id' => $blog->id,
-                ]);
-        }
-
-        foreach ($tags as $tag) {
-        array_push($blogTags,
-            [
-                'tag_id' => $tag,
-                'blog_id' => $blog->id,
+        try {
+            //Create blog first
+            $blog = Blog::create([
+                'title' => $request->title,
+                'post' => $request->post,
+                'postExcerpt' => $request->postExcerpt,
+                'slug' => $request->title,
+                'user_id' => Auth::user()->id,
+                'metaDescription' => $request->metaDescription,
+                'jsonData' => $request->jsonData,
             ]);
-    }
 
-        Blogcategory::insert($blogCategories);
-        Blogtag::insert($blogTags);
+            //Create blog category
+            foreach ($categories as $category) {
+                array_push($blogCategories,
+                    [
+                        'category_id' => $category,
+                        'blog_id' => $blog->id,
+                    ]);
+            }
+
+            foreach ($tags as $tag) {
+                array_push($blogTags,
+                    [
+                        'tag_id' => $tag,
+                        'blog_id' => $blog->id,
+                    ]);
+            }
+
+            Blogcategory::insert($blogCategories);
+            Blogtag::insert($blogTags);
+
+            DB::commit();
+            return "Success!";
+
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            return "Error: " . $throwable;
+        }
     }
 }
