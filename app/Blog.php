@@ -31,4 +31,14 @@ class Blog extends Model
 
         return $newCount > 0 ? "$slug-$newCount" : $slug;
     }
+
+    public function tag()
+    {
+        return $this->belongsToMany('App\Tag', 'blogtags');
+    }
+
+    public function category()
+    {
+        return $this->belongsToMany('App\Category', 'blogcategories');
+    }
 }

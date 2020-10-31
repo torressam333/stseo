@@ -116,7 +116,7 @@ export default {
             this.data.jsonData = JSON.stringify(data);
             this.isCreating = true;
 
-            const res = await this.callApi('post', 'app/create_blog', this.data);
+            const res = await this.callApi('post', 'app/createBlog', this.data);
             if (res.status === 200) {
                 this.s('Blog successfully created')
                 //reload current blog page
