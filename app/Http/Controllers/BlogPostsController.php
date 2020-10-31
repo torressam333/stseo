@@ -38,16 +38,15 @@ class BlogPostsController extends Controller
         ]);
     }
 
-    public function slug()
+    public function slug(Request $request)
     {
-        $title = 'Samuel Is Awesome';
         return Blog::create([
-            'title' => $title,
-            'post' => 'some post',
-            'postExcerpt' => 'some post here',
-            'slug' => $title,
-            'user_id' => 11,
-            'metaDescription' => 'some meta info here',
+            'title' => $request->title,
+            'post' => $request->post,
+            'postExcerpt' => $request->postExcerpt,
+            'slug' => $request->title,
+            'user_id' => Auth::user()->getKey(),
+            'metaDescription' => $request->metaDescription,
         ]);
     }
 
