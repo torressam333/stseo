@@ -114,16 +114,19 @@ export default {
             await this.outputHtml(data.blocks);
             this.data.post = this.articleHTML;
             this.data.jsonData = JSON.stringify(data);
+
+            if(this.data.post.trim() === '') return this.e('Post is required');
+            if(this.data.title.trim() === '') return this.e('title is required');
+            if(this.data.postExcerpt.trim() === '') return this.e('Post excerpt is required');
+            if(this.data.metaDescription.trim() === '') return this.e('Meta description is required');
+            if(!this.data.tag_id.length) return this.e('At least one tag is required');
+            if(!this.data.category_id.length) return this.e('At least one category is required');
+
             this.isCreating = true;
 
             const res = await this.callApi('post', 'app/createBlog', this.data);
             if (res.status === 200) {
-                this.s('Blog successfully created')
-                //reload current blog page
-               /* setTimeout(() =>
-                {
-                    window.location.reload();
-                },3000);*/
+                this.s('Blog successfully created');
 
             }else if (res.status === 422) {
                 if (res.data.errors.title) {

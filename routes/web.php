@@ -46,8 +46,10 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     /*Role Permission Assignment Routes*/
     Route::post('assign_roles','RolePermissionsController@assignRolePermission');
 
-    /*Blog Routes*/
+    /*Blog Creation Routes*/
     Route::post('/createBlog', 'BlogPostsController@createBlog');
+    Route::get('blog_data', 'BlogPostsController@getBlogData'); //get blogs items
+
 });
 
 //Blog Posts Routes

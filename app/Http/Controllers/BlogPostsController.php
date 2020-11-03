@@ -55,6 +55,11 @@ class BlogPostsController extends Controller
         $this->validate($request, [
             'title' => 'required|min:2',
             'post' => 'required|min:3',
+            'postExcerpt' => 'required',
+            'metaDescription' => 'required',
+            'jsonData' => 'required',
+            'category_id' => 'required',
+            'tag_id' => 'required',
         ]);
 
         $categories = $request->category_id;
@@ -103,5 +108,11 @@ class BlogPostsController extends Controller
             DB::rollBack();
             return "Error: " . $throwable;
         }
+    }
+
+    public function getBlogData(Request $request)
+    {
+        return Blog::with(['category', 'tag'])->get();
+
     }
 }

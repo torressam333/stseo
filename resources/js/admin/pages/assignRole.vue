@@ -97,6 +97,14 @@ export default {
                     name: 'createBlog',
                 },
                 {
+                    resourceName: 'Blogs',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'blogs',
+                },
+                {
                     resourceName: 'Admin Users',
                     read: false,
                     write: false,
@@ -153,6 +161,14 @@ export default {
                     update: false,
                     delete: false,
                     name: 'createBlog',
+                },
+                {
+                    resourceName: 'Blogs',
+                    read: false,
+                    write: false,
+                    update: false,
+                    delete: false,
+                    name: 'blogs',
                 },
                 {
                     resourceName: 'Admin Users',
@@ -218,6 +234,7 @@ export default {
                 this.data.id = res.data[0].id;
                 if (res.data[0].permission) {
                     this.resources = JSON.parse(res.data[0].permission);
+                    //this.resources = this.defaultResourcesPermission;
                 }
             }
         } else {
