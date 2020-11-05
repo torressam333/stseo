@@ -36,7 +36,7 @@ class AdminUserController extends Controller
         }
 
         if ($request->path() === 'login'){
-            return redirect('/home');
+            return redirect('/');
         }
 
         return $this->checkPermissions($user, $request);

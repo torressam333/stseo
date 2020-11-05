@@ -65,7 +65,7 @@ export default {
             roles: [],
             resources: [
                 {
-                    resourceName: 'Dashboard',
+                    resourceName: 'Home',
                     read: false,
                     write: false,
                     update: false,
@@ -131,7 +131,7 @@ export default {
             ],
             defaultResourcesPermission: [
                 {
-                    resourceName: 'Dashboard',
+                    resourceName: 'Home',
                     read: false,
                     write: false,
                     update: false,

@@ -58,7 +58,7 @@ Route::get('slug', 'BlogPostsController@slug');
 
 
 //Login/Auth routes
-Route::get('/home', 'AdminUserController@index');
+Route::get('/', 'AdminUserController@index');
 Route::get('/logout', 'AdminUserController@logout');
 Route::any('{slug}', 'AdminUserController@index');
 

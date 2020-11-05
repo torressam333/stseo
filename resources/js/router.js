@@ -21,7 +21,7 @@ import blogs from './admin/pages/blogs';
 const routes = [
     /*Admin Project routes*/
     {
-      path: '/home',
+      path: '/',
       component: home,
       name: 'home'
     },
