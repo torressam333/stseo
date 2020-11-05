@@ -110,9 +110,13 @@ class BlogPostsController extends Controller
         }
     }
 
-    public function getBlogData(Request $request)
+    public function getBlogData()
     {
-        return Blog::with(['category', 'tag'])->get();
+        return Blog::with(['category', 'tag'])->orderBy('id', 'desc')->get();
+    }
 
+    public function deleteBlog(Request $request)
+    {
+        return Blog::where('id', $request->id)->delete();
     }
 }

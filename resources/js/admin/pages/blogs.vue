@@ -93,20 +93,21 @@ export default {
             showDeleteModal: false,
             isDeleting: false,
             deleteItem: {},
-            deletingIndex: -1
+            deletingIndex: -1,
         }
     },
     methods: {
         showDeletingModal(blog, i) {
             const deleteModalObj = {
                 showDeleteModal: true,
-                deleteUrl: 'app/delete_tag',
-                data: blog,
+                deleteUrl: 'app/delete_blog',
+                data: {id: blog.id},
                 deletingIndex: i,
-                isDeleted: false
+                isDeleted: false,
+                msg: 'Are you sure you want to delete this blog',
+                successMsg: 'Blog deleted successfully'
             };
             this.$store.commit('setDeletingModalObj', deleteModalObj);
-            console.log('delete method called')
         },
         format_date(value) {
             if (value) {
