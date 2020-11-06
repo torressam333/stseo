@@ -210,7 +210,7 @@ export default {
     watch: {
         getDeleteModalObj(obj) {
             if (obj.isDeleted) {
-                this.tags.splice(obj.deletingIndex, 1);
+                this.tags.splice(this.deletingIndex, 1);
             }
         }
     }

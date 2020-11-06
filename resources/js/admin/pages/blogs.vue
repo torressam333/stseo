@@ -98,6 +98,7 @@ export default {
     },
     methods: {
         showDeletingModal(blog, i) {
+            this.deletingIndex = i;
             const deleteModalObj = {
                 showDeleteModal: true,
                 deleteUrl: 'app/delete_blog',
@@ -130,7 +131,7 @@ export default {
     watch: {
         getDeleteModalObj(obj) {
             if (obj.isDeleted) {
-                this.blogs.splice(obj.deletingIndex, 1);
+                this.blogs.splice(this.deletingIndex, 1);
             }
         }
     }

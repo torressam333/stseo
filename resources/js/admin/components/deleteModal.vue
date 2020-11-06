@@ -43,7 +43,7 @@ export default {
             this.isDeleting = true;
             const res = await this.callApi('post', this.getDeleteModalObj.deleteUrl, this.getDeleteModalObj.data);
             if (res.status === 200) {
-                this.s(getDeleteModalObj.successMsg);
+                this.s(this.getDeleteModalObj.successMsg);
                 this.$store.commit('setDeleteModal', true);
             } else {
                 this.swr();
