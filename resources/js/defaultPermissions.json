@@ -1,0 +1,68 @@
+[
+
+    {
+        "resourceName": "Home",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "/"
+    },
+    {
+        "resourceName": "Tags",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "tags"
+    },
+    {
+        "resourceName": "Categories",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "category"
+    },
+    {
+        "resourceName": "Create Blog",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "createBlog"
+    },
+    {
+        "resourceName": "Blogs",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "blogs"
+    },
+    {
+        "resourceName": "Admin Users",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "adminusers"
+    },
+    {
+        "resourceName": "Role Management",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "role"
+    },
+    {
+        "resourceName": "Role Assignment",
+        "read": true,
+        "write": true,
+        "update": true,
+        "delete": true,
+        "name": "assignRole"
+    }
+
+]

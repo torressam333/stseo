@@ -237,13 +237,16 @@ export default {
             this.editModal = true;
             this.index = index;
         },
-        showDeletingModal(tag, i) {
+        showDeletingModal(user, i) {
+            this.deletingIndex = i;
             const deleteModalObj = {
                 showDeleteModal: true,
-                deleteUrl: 'app/delete_tag',
-                data: tag,
+                deleteUrl: 'app/delete_user',
+                data: user,
                 deletingIndex: i,
-                isDeleted: false
+                isDeleted: false,
+                msg: 'Are you sure you want to delete this user?',
+                successMsg: 'User deleted successfully'
             };
             this.$store.commit('setDeletingModalObj', deleteModalObj);
             console.log('delete method called')

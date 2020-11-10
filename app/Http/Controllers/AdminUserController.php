@@ -132,7 +132,7 @@ class AdminUserController extends Controller
         return User::where('id', $request->id)->update($data);
     }
 
-    /*public function adminLogin(Request $request)
+    public function adminLogin(Request $request)
     {
         $this->validate($request, [
             'email' => 'bail|required|email',
@@ -165,5 +165,10 @@ class AdminUserController extends Controller
                 'msg' => 'Incorrect login credentials'
             ], 401);
         }
-    }*/
+    }
+
+    public function deleteUser(Request $request)
+    {
+        return User::where('id', $request->id)->delete();
+    }
 }
