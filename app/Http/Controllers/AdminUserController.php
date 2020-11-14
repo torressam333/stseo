@@ -51,7 +51,7 @@ class AdminUserController extends Controller
         $hasPermission = false;
 
         if (!$permissions) {
-            return view('notfound');
+            return view('welcome');
         }
 
         foreach ($permissions as $permission){
@@ -64,6 +64,7 @@ class AdminUserController extends Controller
 
         if($hasPermission) return view('welcome');
 
+        return view('welcome');
         return view('notfound');
     }
 

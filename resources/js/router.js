@@ -16,7 +16,9 @@ import login from './admin/pages/login';
 import role from './admin/pages/role';
 import assignRole from './admin/pages/assignRole';
 import createBlog from './admin/pages/createBlog';
+import editBlog from './admin/pages/editBlog';
 import blogs from './admin/pages/blogs';
+import notfound from './admin/pages/notfound'
 
 const routes = [
     /*Admin Project routes*/
@@ -39,6 +41,11 @@ const routes = [
         path: '/createBlog',
         component: createBlog,
         name: 'createBlog'
+    },
+    {
+        path: '/editBlog/:id',
+        component: editBlog,
+        name: 'editBlog'
     },
     {
         path: '/blogs',
@@ -64,6 +71,11 @@ const routes = [
         path: '/login',
         component: login,
         name: 'login'
+    },
+    {
+        path: '*',
+        component: notfound,
+        name: 'notfound'
     }
 ];
 

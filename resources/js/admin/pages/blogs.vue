@@ -9,7 +9,7 @@
                             @click="$router.push('/createBlog')"
                         >
                             <Icon type="md-add">Default</Icon>
-                            Create Blog
+                            Add Blog
                         </Button>
                     </p>
 
@@ -52,9 +52,9 @@
                                     <Button
                                         type="info"
                                         size="small"
-                                        @click="showEditModal(blog, i)"
-                                        v-if="isUpdatePermitted"
-                                    >Edit
+                                        @click="$router.push(`/editBlog/${blog.id}`)"
+                                        v-if="isUpdatePermitted">
+                                        Edit
                                     </Button>
                                     <Button
                                         type="error"

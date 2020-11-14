@@ -47,21 +47,22 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function () {
     /*Role Permission Assignment Routes*/
     Route::post('assign_roles','RolePermissionsController@assignRolePermission');
 
-    /*Blog Creation Routes*/
-    Route::post('/createBlog', 'BlogPostsController@createBlog');
+    /*Blog Routes*/
+    Route::post('createBlog', 'BlogPostsController@createBlog');
     Route::get('blog_data', 'BlogPostsController@getBlogData'); //get blogs items
     Route::post('delete_blog', 'BlogPostsController@deleteBlog'); //delete blog
+    Route::get('blog/{id}', 'BlogPostsController@getSingleBlog');
 
 });
 
-//Blog Posts Routes
-Route::post('/createBlog', 'BlogPostsController@uploadEditorImage');
+//Non admin Blog Routes
+Route::post('createBlog', 'BlogPostsController@uploadEditorImage');
 Route::get('slug', 'BlogPostsController@slug');
 
 
 //Login/Auth routes
 Route::get('/', 'AdminUserController@index');
 Route::get('/logout', 'AdminUserController@logout');
-Route::any('{slug}', 'AdminUserController@index');
+Route::any('{slug}', 'AdminUserController@index')->where('slug', '([A-z\d\-\/_.]+)?');
 
 

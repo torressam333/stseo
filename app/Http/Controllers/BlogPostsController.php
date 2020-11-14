@@ -119,4 +119,9 @@ class BlogPostsController extends Controller
     {
         return Blog::where('id', $request->id)->delete();
     }
+
+    public function getSingleBlog(Request $request, $id)
+    {
+        return Blog::with(['category', 'tag'])->firstWhere('id', $id);
+    }
 }

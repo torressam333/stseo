@@ -4,10 +4,10 @@
             <div class="container-fluid">
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-                    <p class="_title0">Role Management
+                    <p class="_title0">Blog Form
                         <Button @click="addModal=true" v-if="isWritePermitted">
                             <Icon type="md-add">Default</Icon>
-                            Add a new role
+                            Add a new blog
                         </Button>
                     </p>
 
