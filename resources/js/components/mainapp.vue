@@ -21,7 +21,7 @@
                             <li v-for="(menuItem, i) in permission"
                                 :key="i"
                                 v-if="permission.length && menuItem.read">
-                                <router-link :to="menuItem.name">
+                                <router-link :to="`/${menuItem.name}`">
                                     <Icon type="ios-home-outline" />
                                     {{menuItem.resourceName}}
                                 </router-link>
