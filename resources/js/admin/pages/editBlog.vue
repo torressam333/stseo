@@ -14,7 +14,7 @@
                     </div>
 
                     <div class="_overflow _table_div blog_editor">
-                        <editor
+                        <editor v-if="initData"
                             ref="editor"
                             autofocus
                             holder-id="codex-editor"
@@ -187,17 +187,24 @@ export default {
 
         if (cat.status === 200) {
             if(!blog.data) return this.$router.push('/notfound');
-            this.blog = blog.data
+            this.initData = JSON.parse(blog.data.jsonData);
             this.category = cat.data
             this.tag = tag.data
+
 
             //Loop to populate the existing blogs categories and tags
             for (let t of tag.data) {
                 this.data.tag_id.push(t.id);
             }
+
             for (let c of cat.data) {
                 this.data.category_id.push(c.id);
             }
+
+            this.data.title = blog.data.title;
+            this.data.jsonData = blog.data.jsonData;
+            this.data.metaDescription = blog.data.metaDescription;
+            this.data.postExcerpt = blog.data.postExcerpt;
 
         } else {
             this.swr()
