@@ -52,15 +52,7 @@ class BlogPostsController extends Controller
 
     public function createBlog(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required|min:2',
-            'post' => 'required|min:3',
-            'postExcerpt' => 'required',
-            'metaDescription' => 'required',
-            'jsonData' => 'required',
-            'category_id' => 'required',
-            'tag_id' => 'required',
-        ]);
+        $this->validateBlog($request);
 
         $categories = $request->category_id;
         $tags = $request->tag_id;
@@ -123,5 +115,78 @@ class BlogPostsController extends Controller
     public function getSingleBlog(Request $request, $id)
     {
         return Blog::with(['category', 'tag'])->firstWhere('id', $id);
+    }
+
+    public function updateBlog(Request $request, $id)
+    {
+        $this->validateBlog($request);
+
+        $categories = $request->category_id;
+        $tags = $request->tag_id;
+        $blogCategories = [];
+        $blogTags = [];
+
+        DB::beginTransaction();
+
+        try {
+            //Create blog first
+            $blog = Blog::where('id', $id)->update([
+                'title' => $request->title,
+                'post' => $request->post,
+                'postExcerpt' => $request->postExcerpt,
+                'slug' => $request->title,
+                'user_id' => Auth::user()->id,
+                'metaDescription' => $request->metaDescription,
+                'jsonData' => $request->jsonData,
+            ]);
+
+            //Remove previous values for cats and tags
+            Blogcategory::where('blog_id', $id)->delete();
+            Blogcategory::insert($blogCategories);
+
+            //Remove previous values for cats and tags
+            Blogtag::where('blog_id', $id)->delete();
+            Blogtag::insert($blogTags);
+
+            //Create blog category
+            foreach ($categories as $category) {
+                array_push($blogCategories,
+                    [
+                        'category_id' => $category,
+                        'blog_id' => $id,
+                    ]);
+            }
+
+            foreach ($tags as $tag) {
+                array_push($blogTags,
+                    [
+                        'tag_id' => $tag,
+                        'blog_id' => $id,
+                    ]);
+            }
+
+            Blogcategory::insert($blogCategories);
+            Blogtag::insert($blogTags);
+
+            DB::commit();
+            return "Success!";
+
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            return "Error: " . $throwable;
+        }
+    }
+
+    public function validateBlog(Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required|min:2',
+            'post' => 'required|min:3',
+            'postExcerpt' => 'required',
+            'metaDescription' => 'required',
+            'jsonData' => 'required',
+            'category_id' => 'required',
+            'tag_id' => 'required',
+        ]);
     }
 }

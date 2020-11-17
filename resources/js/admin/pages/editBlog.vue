@@ -6,10 +6,6 @@
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
                     <p class="_title0">Update blog</p>
                     <div class="_input_field">
-                        <Input type="text" v-model="data.title" placeholder="Title" />
-                    </div>
-
-                    <div class="_input_field">
                         <Input type="text" v-model="data.title" placeholder="Blog Title"/>
                     </div>
 
@@ -55,7 +51,7 @@
 
                     <div class="_input_field">
                         <Button @click="save" :loading="isCreating" :disabled="isCreating">
-                            {{isCreating ? 'Creating...' : 'Create Blog'}}
+                            {{isCreating ? 'Updating...' : 'Update Blog'}}
                         </Button>
                     </div>
 
@@ -93,18 +89,18 @@ export default {
             this.data.post = this.articleHTML;
             this.data.jsonData = JSON.stringify(data);
 
-            if(this.data.post.trim() === '') return this.e('Post tile is required');
             if(this.data.title.trim() === '') return this.e('Blog title is required');
-            if(this.data.postExcerpt.trim() === '') return this.e('Post excerpt is required');
+            if(this.data.post.trim() === '') return this.e('Blog body is required');
+            if(this.data.postExcerpt.trim() === '') return this.e('Blog excerpt is required');
             if(this.data.metaDescription.trim() === '') return this.e('Meta description is required');
             if(!this.data.tag_id.length) return this.e('At least one tag is required');
             if(!this.data.category_id.length) return this.e('At least one category is required');
 
             this.isCreating = true;
 
-            const res = await this.callApi('post', 'app/createBlog', this.data);
+            const res = await this.callApi('post', `/app/updateBlog/${this.$route.params.id}`, this.data);
             if (res.status === 200) {
-                this.s('Blog successfully created');
+                this.s('Blog successfully updated');
                 await this.$router.push('/blogs');
             }else if (res.status === 422) {
                 if (res.data.errors.title) {
