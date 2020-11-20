@@ -4,13 +4,7 @@
             <div class="container-fluid">
                 <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                 <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-                    <p class="_title0">Blog Form
-                        <Button @click="addModal=true" v-if="isWritePermitted">
-                            <Icon type="md-add">Default</Icon>
-                            Add a new blog
-                        </Button>
-                    </p>
-
+                    <p class="_title0">Create Blog</p>
                     <div class="_input_field">
                         <Input type="text" v-model="data.title" placeholder="Blog Title"/>
                     </div>
