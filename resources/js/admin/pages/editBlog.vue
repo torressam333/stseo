@@ -189,11 +189,11 @@ export default {
 
 
             //Loop to populate the existing blogs categories and tags
-            for (let t of tag.data) {
+            for (let t of blog.data.tag) {
                 this.data.tag_id.push(t.id);
             }
 
-            for (let c of cat.data) {
+            for (let c of blog.data.category) {
                 this.data.category_id.push(c.id);
             }
 
